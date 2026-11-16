@@ -83,8 +83,8 @@ Você não precisa escolher sozinho: a IA indica o melhor para o seu caso e expl
 | **Produto** (`templates/produto`) | Produto, SaaS, aplicativo, curso, infoproduto ou assinatura com preço na página, comprado por um link | Visual claro e escuro com gradiente, grade de destaques, linha do tempo e cards de plano |
 | **Serviço** (`templates/servico`) | Agência, consultoria, estúdio ou profissional liberal que vende conversando | Visual escuro com gradiente holográfico e botão de WhatsApp |
 
-Os dois são feitos em Astro, Tailwind v4 e TypeScript, com ilhas React/Motion onde há
-interação, e vêm com todos os efeitos e animações ligados. As cores, as fontes e os textos são
+Os dois são feitos em Astro, Tailwind v4 e TypeScript, com os efeitos feitos em CSS e scripts
+pequenos, e vêm com todos os efeitos e animações ligados. As cores, as fontes e os textos são
 trocados pelos seus; o acabamento é mantido.
 
 Depois da escolha, o template escolhido passa para a pasta principal do projeto e o outro é

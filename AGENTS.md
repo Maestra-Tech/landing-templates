@@ -1,7 +1,7 @@
 # Instruções para agentes
 
-Este é um repositório de templates de landing page (Astro + Tailwind v4 + TypeScript, com ilhas
-React/Motion onde há interação). Quem usa é um aluno que não programa: fale em português
+Este é um repositório de templates de landing page (Astro + Tailwind v4 + TypeScript, com os
+efeitos em CSS e scripts pequenos). Quem usa é um aluno que não programa: fale em português
 simples, uma decisão por vez, e mostre a prévia em vez de descrever.
 
 ## Use a skill `criar-landing`

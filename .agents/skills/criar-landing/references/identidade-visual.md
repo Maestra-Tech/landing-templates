@@ -24,7 +24,7 @@ todo de forma coerente; mexer em cor dentro de cada seção cria um site remenda
 2. Leia a parte de identidade do `BRIEFING.md` (logo, cores, fontes, referências, direção
    escolhida).
 3. Leia a seção sobre visual no `TEMPLATE.md` e o `package.json`, para saber o que o template
-   usa (Astro + Tailwind v4 + TypeScript, com ilhas React/Motion onde há interação) e quais
+   usa (Astro + Tailwind v4 + TypeScript, com os efeitos em CSS e scripts pequenos em `src/scripts/`) e quais
    efeitos existem no bloco `effects` do `src/site.config.ts`.
 
 Use os nomes de variáveis que existem no arquivo. Não renomeie tokens nem apague um token sem
@@ -153,8 +153,8 @@ Regra geral: tokens primeiro, config depois, componente por último.
 - Leve a marca até os efeitos pelos tokens: as cores do gradiente, do brilho e dos destaques
   vêm de `tokens.css`. Um efeito que "não combina" quase sempre só está com as cores do
   exemplo.
-- Não reescreva um componente animado como versão estática, não troque uma ilha React por HTML
-  simples e não remova biblioteca (React, Motion) para "deixar mais leve". Confira no
+- Não reescreva um componente animado como versão estática, não troque um componente interativo por
+  HTML simples e não remova script nem dependência para "deixar mais leve". Confira no
   `package.json` e no `TEMPLATE.md` o que o template usa e mantenha.
 - Componentes ilustrativos (conversas, telas de exemplo, diagramas) são adaptados ao negócio do
   aluno ou trocados por imagem real dele, como descrito em `references/conteudo.md`. Nunca
@@ -187,7 +187,7 @@ ver, preferir sem, vale o caso 1.
 
 ### Quando editar um componente
 
-Em `src/components/sections/`, `src/components/react/` ou `src/scripts/`, só nestes casos:
+Em `src/components/` ou `src/scripts/`, só nestes casos:
 
 - **Conteúdo de demonstração preso no componente** (texto de uma tela de exemplo, de uma
   conversa ilustrativa) que não vem do config: troque pelo conteúdo do aluno, mantendo a

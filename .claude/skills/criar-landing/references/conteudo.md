@@ -25,10 +25,10 @@ Leia, nesta ordem:
 1. `BRIEFING.md` (o que dizer);
 2. `src/site.config.ts` inteiro (onde dizer);
 3. `TEMPLATE.md` e `package.json` (o que cada seção faz, quais campos são obrigatórios e o que
-   o template usa: Astro + Tailwind v4 + TypeScript, com ilhas React/Motion onde há interação).
+   o template usa: Astro + Tailwind v4 + TypeScript, com os efeitos em CSS e scripts pequenos em `src/scripts/`).
 
 Os campos variam entre os templates. Use os nomes que estão no arquivo; não crie campo novo sem
-conferir se algum componente em `src/components/sections/` ou `src/components/react/` o lê.
+conferir se algum componente em `src/components/` o lê.
 
 O objetivo desta fase é trocar o conteúdo, não enxugar a página. Os templates têm acabamento
 alto (efeitos, animações, cards, componentes ilustrativos) e isso deve chegar inteiro à página
@@ -155,7 +155,7 @@ parte do acabamento e devem continuar na página, mas com o conteúdo do aluno.
   conteúdo claramente demonstrativo do funcionamento (uma pergunta e uma resposta típicas, um
   pedido de exemplo), sem nome de cliente real nem promessa de resultado.
 - O conteúdo desses componentes pode estar no config ou, em alguns casos, dentro do próprio
-  componente (`src/components/sections/` ou `src/components/react/`). Procure pelos textos do
+  componente (em `src/components/`). Procure pelos textos do
   exemplo em todo o `src/` para não deixar nada para trás.
 
 Se não houver como adaptar com verdade (o aluno ainda não tem o produto pronto para mostrar,

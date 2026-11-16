@@ -27,8 +27,7 @@ usando um dos dois templates deste repositório. O aluno conversa; você faz o t
 ## Como este repositório funciona
 
 - `templates/produto/` e `templates/servico/` são dois sites Astro completos e independentes
-  (Astro + Tailwind v4 + TypeScript, com ilhas React/Motion onde há interação, em
-  `src/components/react/*.tsx`). Confira no `package.json` e no README do template o que ele
+  (Astro + Tailwind v4 + TypeScript, com os efeitos em CSS e scripts pequenos em `src/scripts/`). Confira no `package.json` e no README do template o que ele
   realmente usa antes de mexer.
 - Os templates são de acabamento alto: trazem efeitos, animações, cards e componentes prontos.
   O trabalho é trocar conteúdo e identidade, preservando esse acabamento.

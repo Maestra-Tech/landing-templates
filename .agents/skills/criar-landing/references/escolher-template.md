@@ -83,8 +83,7 @@ O primeiro comando só lista o que seria feito. O segundo faz:
 ## Depois da promoção
 
 1. Leia `TEMPLATE.md` e `package.json` por inteiro: eles mostram as seções, as particularidades
-   e o que o template usa (Astro + Tailwind v4 + TypeScript, com ilhas React/Motion onde há
-   interação, em `src/components/react/`).
+   e o que o template usa (Astro + Tailwind v4 + TypeScript, com os efeitos em CSS e scripts pequenos em `src/scripts/`).
 2. Leia `src/site.config.ts` por inteiro: anote quais seções existem, quais têm `enabled`,
    quais efeitos há no bloco `effects` (todos ligados por padrão) e quais campos são
    obrigatórios segundo o tipo.

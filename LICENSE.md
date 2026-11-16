@@ -50,8 +50,8 @@ outros sites nem de repassá-lo a terceiros.
 
 ## 4. Componentes de terceiros
 
-O Material utiliza software e fontes de terceiros (por exemplo, Astro, Tailwind CSS, React,
-Motion e fontes distribuídas via Fontsource), que continuam regidos pelas suas próprias
+O Material utiliza software e fontes de terceiros (por exemplo, Astro, Tailwind CSS e fontes
+distribuídas via Fontsource), que continuam regidos pelas suas próprias
 licenças. Esta licença não altera nem substitui essas licenças.
 
 ## 5. Conteúdo de exemplo
