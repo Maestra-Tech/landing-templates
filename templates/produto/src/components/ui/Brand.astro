@@ -1,0 +1,37 @@
+---
+import { site } from '@/site.config'
+
+/**
+ * A marca. Com imagem de logo no config, mostra a imagem; sem imagem, escreve o nome ao lado de
+ * um símbolo genérico em degradê (um "sol nascente", só para o modelo não ficar sem marca).
+ *
+ * `onDark` escolhe a versão do logo para fundo escuro (rodapé).
+ */
+interface Props {
+  onDark?: boolean
+}
+
+const { onDark = false } = Astro.props
+const { name, logo } = site.brand
+const src = onDark ? logo.srcOnDark || logo.src : logo.src
+---
+
+{
+  src ? (
+    <img src={src} alt={name} width={logo.width} height={logo.height} class="brand-lockup" />
+  ) : (
+    <span class="brand-word">
+      <svg class="brand-word__mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <rect width="24" height="24" rx="7" fill="url(#seal-grad)" />
+        <path
+          d="M5.5 16.5a6.5 6.5 0 0 1 13 0M12 5.2v2M6.3 8.3l1.4 1.4M17.7 8.3l-1.4 1.4"
+          fill="none"
+          style="stroke: var(--on-grad)"
+          stroke-width="1.9"
+          stroke-linecap="round"
+        />
+      </svg>
+      <span>{name}</span>
+    </span>
+  )
+}

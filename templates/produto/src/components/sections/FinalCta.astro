@@ -1,0 +1,28 @@
+---
+import Cta from '@/components/ui/Cta.astro'
+import Heading from '@/components/ui/Heading.astro'
+import { visible } from '@/lib/sections'
+import { site } from '@/site.config'
+
+/** O convite final: título que acende palavra por palavra, o botão principal e uma nota. */
+const { finalCta, cta } = site
+---
+
+{
+  visible.comecar && (
+    <section id="comecar" class="section band-cinema" data-section="comecar" aria-labelledby="comecar-title">
+      <div class="final-shell" data-reveal>
+        <Heading id="comecar-title" class="t-h2" parts={finalCta} words />
+        {finalCta.lead && <p class="t-lead">{finalCta.lead}</p>}
+        {finalCta.invitation && <p class="final-invitation">{finalCta.invitation}</p>}
+        <div class="final-cta">
+          <div>
+            <Cta />
+          </div>
+          {cta.note && <p class="t-sm">{cta.note}</p>}
+        </div>
+        {finalCta.note && <p class="t-body">{finalCta.note}</p>}
+      </div>
+    </section>
+  )
+}

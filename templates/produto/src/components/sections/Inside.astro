@@ -1,0 +1,141 @@
+---
+import Heading from '@/components/ui/Heading.astro'
+import { visible } from '@/lib/sections'
+import { site } from '@/site.config'
+
+/**
+ * Por dentro — a seção de leitura.
+ *
+ * - Abertura: etiqueta, título, parágrafos e (opcional) a caixa de destaque ao lado.
+ * - Índice lateral + cards: cada ponto do config vira um card e uma linha no índice. No
+ *   computador o índice fica fixo, e `scripts/inside-rail.ts` marca o ponto que está sendo lido.
+ *   Sem script, o índice continua sendo uma lista de links que funciona.
+ * - Fecho (opcional): o único card desta seção com a borda animada.
+ * - Amostra (opcional): um dado em destaque, com a origem ao lado.
+ */
+const { inside } = site
+const slug = (index: number) => `ponto-${index + 1}`
+const number = (index: number) => String(index + 1).padStart(2, '0')
+---
+
+{
+  visible['por-dentro'] && (
+    <section id="por-dentro" class="section band-paper" data-section="por-dentro" aria-labelledby="por-dentro-title">
+      <div class="inside-shell">
+        <div class="ev-open">
+          <header class="ev-head" data-reveal>
+            {inside.kicker && (
+              <p class="kicker">
+                <span class="grad-text">{inside.kicker}</span>
+              </p>
+            )}
+            <Heading id="por-dentro-title" class="t-h2" parts={inside} />
+            {inside.lead.map((paragraph) => (
+              <p class="t-lead">{paragraph}</p>
+            ))}
+          </header>
+
+          {inside.highlight.enabled && (
+            <figure class="ev-proof" data-reveal>
+              <blockquote class="ev-proof__quote">{inside.highlight.quote}</blockquote>
+              {inside.highlight.source && (
+                <figcaption class="cite-box">
+                  <span class="cite-box__label">{inside.highlight.sourceLabel}</span>
+                  <span class="cite-box__text">{inside.highlight.source}</span>
+                </figcaption>
+              )}
+              {inside.highlight.note && <p class="ev-proof__gloss">{inside.highlight.note}</p>}
+            </figure>
+          )}
+        </div>
+
+        <div class="mech-layout">
+          <nav class="mech-rail" aria-label={inside.railTitle} data-rail>
+            <p class="kicker">{inside.railTitle}</p>
+            <ol class="mech-rail__list" role="list">
+              {inside.items.map((item, index) => (
+                <li>
+                  <a class="mech-rail__link" href={`#${slug(index)}`}>
+                    <span class="mech-rail__index">{number(index)}</span>
+                    <span class="mech-rail__term">{item.term}</span>
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+
+          <ol class="mech-list" role="list">
+            {inside.items.map((item, index) => (
+              <li class="mech" id={slug(index)} data-glow-card data-reveal style={`--reveal-index:${index}`}>
+                <p class="mech__eyebrow">
+                  <span class="mech__index grad-text">{number(index)}</span>
+                  <span class="mech__dot" aria-hidden="true" />
+                  <span class="mech__term grad-text">{item.term}</span>
+                </p>
+                <h3 class="t-h3 mech__headline">{item.title}</h3>
+
+                <div class="mech__body">
+                  {item.paragraphs.map((paragraph) => (
+                    <p class="mech__p">{paragraph}</p>
+                  ))}
+
+                  {item.note && (
+                    <div class="mech__note">
+                      <strong class="mech__note-lead">{item.note.lead}</strong>
+                      <span>{item.note.text}</span>
+                    </div>
+                  )}
+
+                  {item.chips && item.chips.items.length > 0 && (
+                    <span class="mech__chips">
+                      <span class="mech__chips-label grad-text">{item.chips.label}</span>
+                      <span class="mech__chips-row">
+                        {item.chips.items.map((chip) => (
+                          <span class="paper-chip">{chip}</span>
+                        ))}
+                      </span>
+                    </span>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        {inside.closing.enabled && (
+          <div class="ev-closing grad-border" data-glow-card data-reveal>
+            <div class="ev-closing__head">
+              <h3 class="t-h3 ev-closing__title">{inside.closing.title}</h3>
+              <p class="ev-closing__lead">
+                <span class="shimmer">{inside.closing.lead}</span>
+              </p>
+            </div>
+            <div class="ev-closing__body">
+              {inside.closing.paragraphs.map((paragraph) => (
+                <p>{paragraph}</p>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {inside.sample.enabled && (
+          <figure class="ev-sample-figure" data-reveal>
+            <div class="ev-sample">
+              <div class="ev-sample__body">
+                <p class="ev-sample__label">{inside.sample.label}</p>
+                <p class="ev-sample__value">{inside.sample.value}</p>
+              </div>
+              {inside.sample.source && (
+                <p class="cite-box">
+                  <span class="cite-box__label">{inside.sample.sourceLabel}</span>
+                  <span class="cite-box__text">{inside.sample.source}</span>
+                </p>
+              )}
+            </div>
+            {inside.sample.caption && <figcaption class="ev-sample__caption">{inside.sample.caption}</figcaption>}
+          </figure>
+        )}
+      </div>
+    </section>
+  )
+}

@@ -1,0 +1,19 @@
+---
+// Botão secundário: pílula escura com borda holográfica animada e seta.
+import { contactHref, isExternal } from '../../lib/contact';
+
+interface Props {
+  label: string;
+}
+
+const { label } = Astro.props;
+const href = contactHref();
+const external = isExternal(href);
+---
+
+<span class="holo-frame">
+  <a class="holo-pill" href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener' : undefined}>
+    {label}
+    <span class="holo-pill__arrow" aria-hidden="true">→</span>
+  </a>
+</span>

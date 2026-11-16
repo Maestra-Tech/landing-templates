@@ -1,0 +1,38 @@
+---
+import CompareDuo from '@/components/ui/CompareDuo.astro'
+import Cta from '@/components/ui/Cta.astro'
+import Heading from '@/components/ui/Heading.astro'
+import Seal from '@/components/ui/Seal.astro'
+import { visible } from '@/lib/sections'
+import { site } from '@/site.config'
+
+/**
+ * O comparativo: o jeito comum (card apagado) contra o seu produto (card com brilho e selos).
+ * A faixa escura no fim traz uma frase, o selo e um botão.
+ */
+const { compare } = site
+---
+
+{
+  visible.comparativo && (
+    <section id="comparativo" class="section band-paper" data-section="comparativo" aria-labelledby="comparativo-title">
+      <div class="section__shell">
+        <header class="section__header" data-reveal>
+          <Heading id="comparativo-title" class="t-h2" parts={compare} />
+        </header>
+
+        <CompareDuo dim={compare.them} bright={compare.us} />
+
+        {compare.strip.enabled && (
+          <div class="dark-band safety-strip">
+            <p class="safety-strip__text">
+              {compare.strip.text}
+              <Seal />
+            </p>
+            <Cta label={compare.strip.ctaLabel || undefined} class="safety-strip__cta" />
+          </div>
+        )}
+      </div>
+    </section>
+  )
+}

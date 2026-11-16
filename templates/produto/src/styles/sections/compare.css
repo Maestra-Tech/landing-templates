@@ -1,0 +1,166 @@
+/* ============================================================
+   COMPARATIVO e ANTES/DEPOIS — dois cards lado a lado.
+
+   O card da esquerda é o "apagado" (o jeito comum); o da direita tem brilho, borda em degradê e
+   selo em cada linha (o seu produto). Cada card tem a própria altura. Ao entrar na tela, o
+   apagado vem da esquerda e o brilhante vem da direita.
+   ============================================================ */
+.compare-duo {
+  inline-size: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: start;
+  gap: var(--s-4);
+}
+
+@media (min-width: 900px) {
+  .compare-duo {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-5);
+  }
+}
+
+.compare-dim,
+.compare-bright {
+  position: relative;
+  min-inline-size: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  padding: var(--s-5);
+  border-radius: var(--radius-panel);
+  overflow-wrap: break-word;
+  word-break: normal;
+  hyphens: none;
+}
+
+@media (min-width: 900px) {
+  .compare-dim,
+  .compare-bright {
+    padding: var(--s-6);
+  }
+}
+
+/* ---------- Card apagado: sóbrio, não quebrado ---------- */
+.compare-dim {
+  background: color-mix(in oklab, var(--paper-3) 92%, var(--paper-ink) 8%);
+  border: 1px solid color-mix(in oklab, var(--paper-ink) 12%, transparent);
+  color: var(--paper-ink2);
+  box-shadow: var(--shadow-soft);
+}
+
+.compare-dim .compare-duo__title {
+  color: color-mix(in oklab, var(--paper-ink) 72%, transparent);
+}
+
+.compare-dim .compare-duo__list > li {
+  color: var(--paper-ink2);
+}
+
+.compare-dim .compare-duo__list > li::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 0.62em;
+  inline-size: 6px;
+  block-size: 6px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in oklab, var(--paper-ink) 26%, transparent);
+}
+
+/* ---------- Card brilhante ---------- */
+.compare-bright {
+  color: var(--paper-ink);
+}
+
+.compare-bright .compare-duo__title {
+  color: var(--paper-ink);
+}
+
+.compare-duo__title {
+  margin: 0;
+  font-size: var(--t-h3);
+  text-wrap: balance;
+}
+
+.compare-duo__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  font-family: var(--font-body);
+  font-size: var(--t-body);
+  line-height: 1.6;
+}
+
+.compare-duo__list > li {
+  position: relative;
+  min-inline-size: 0;
+  padding-inline-start: calc(var(--s-2) + 6px);
+  text-wrap: pretty;
+}
+
+/* A linha com selo: o selo é a coluna fixa, o texto é a coluna que respira. */
+.compare-duo__list > li.compare-duo__marked {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-2);
+  padding-inline-start: var(--s-1);
+}
+
+.compare-duo__list > li > span {
+  min-inline-size: 0;
+  flex: 1 1 auto;
+}
+
+.compare-duo__list strong {
+  font-weight: 700;
+  color: var(--paper-ink);
+}
+
+.compare-duo__seal {
+  flex: none;
+  inline-size: 18px;
+  block-size: 18px;
+  margin-block-start: 0.22em;
+  margin-inline-end: 2px;
+}
+
+/* ---------- A faixa que fecha o comparativo: frase, selo e botão ---------- */
+.safety-strip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-4);
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: var(--t-lg);
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.safety-strip .safety-strip__text {
+  margin: 0;
+  max-inline-size: 66ch;
+  color: var(--paper);
+}
+
+.safety-strip .seal {
+  inline-size: 1.25em;
+  block-size: 1.25em;
+  margin-inline: 0.35em 0.15em;
+  vertical-align: -0.22em;
+}
+
+.safety-strip__cta {
+  inline-size: 100%;
+  margin-block-start: var(--s-1);
+}
+
+@media (min-width: 640px) {
+  .safety-strip__cta {
+    inline-size: auto;
+  }
+}

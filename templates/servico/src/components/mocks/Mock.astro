@@ -1,0 +1,49 @@
+---
+// Escolhe qual ilustração desenhar a partir do campo "kind" do config.
+import type { Mock } from '../../site.config';
+import ImageSlot from '../ui/ImageSlot.astro';
+import MockChat from './MockChat.astro';
+import MockThread from './MockThread.astro';
+import MockTimeline from './MockTimeline.astro';
+import MockTree from './MockTree.astro';
+import MockFlow from './MockFlow.astro';
+
+interface Props {
+  mock: Mock;
+  /** true = ocupa toda a largura do card (senão, no máximo 340px). */
+  wide?: boolean;
+}
+
+const { mock, wide = false } = Astro.props;
+---
+
+<div class:list={['mock', { 'mock--wide': wide }]}>
+  {mock.kind === 'image' && <ImageSlot src={mock.src} alt={mock.alt} />}
+  {mock.kind === 'chat' && <MockChat {...mock} />}
+  {mock.kind === 'thread' && <MockThread {...mock} />}
+  {mock.kind === 'timeline' && <MockTimeline {...mock} />}
+  {mock.kind === 'tree' && <MockTree {...mock} />}
+  {mock.kind === 'flow' && <div class="mock__frame"><MockFlow {...mock} /></div>}
+</div>
+
+<style>
+  .mock {
+    width: 100%;
+    max-width: 340px;
+  }
+
+  .mock--wide {
+    max-width: none;
+  }
+
+  .mock__frame {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: linear-gradient(180deg, var(--surface), var(--bg-raised));
+    box-shadow: var(--shadow-mock);
+  }
+</style>

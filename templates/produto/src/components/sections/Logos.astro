@@ -1,0 +1,62 @@
+---
+import Icon from '@/components/ui/Icon.astro'
+import { visible } from '@/lib/sections'
+import { site } from '@/site.config'
+
+/**
+ * A faixa de logos: uma esteira que anda sozinha.
+ *
+ * A lista é escrita três vezes para a volta não ter emenda; as duas cópias extras são enfeite e
+ * ficam escondidas dos leitores de tela. A duração da volta cresce com a quantidade de itens,
+ * para a velocidade de leitura continuar a mesma.
+ */
+const { logos } = site
+const COPIES = 3
+const rows = Array.from({ length: COPIES }, (_, index) => ({ decorative: index > 0 }))
+const duration = Math.max(24, logos.items.length * 6)
+const SHAPES = ['shape-1', 'shape-2', 'shape-3', 'shape-4'] as const
+---
+
+{
+  visible.logos && (
+    <section class="logo-band" data-section="logos" aria-label={logos.label}>
+      <div class="logo-band__inner">
+        <p class="logo-band__label">{logos.label}</p>
+      </div>
+
+      <div class="logo-marquee" style={`--logo-copies:${COPIES};--logo-duration:${duration}s`}>
+        <div class="logo-marquee__track">
+          {rows.map((row) => (
+            <ul class="logo-marquee__row" role="list" aria-hidden={row.decorative ? 'true' : undefined}>
+              {logos.items.map((item, index) => (
+                <li class="logo-item">
+                  {item.image ? (
+                    <img
+                      src={item.image.src}
+                      alt={row.decorative ? '' : item.image.alt || item.name}
+                      width={item.image.width}
+                      height={item.image.height}
+                      decoding="async"
+                      fetchpriority="low"
+                    />
+                  ) : (
+                    <span class="logo-word">
+                      <Icon name={SHAPES[index % SHAPES.length]!} />
+                      {item.name}
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          ))}
+        </div>
+      </div>
+
+      {logos.note && (
+        <div class="logo-band__inner">
+          <p class="logo-band__note">{logos.note}</p>
+        </div>
+      )}
+    </section>
+  )
+}

@@ -1,0 +1,87 @@
+---
+import Heading from '@/components/ui/Heading.astro'
+import Icon from '@/components/ui/Icon.astro'
+import { visible } from '@/lib/sections'
+import { site } from '@/site.config'
+
+/**
+ * A vitrine: uma sequência de "folhas" (telas, relatórios, modelos), cada uma com o título em
+ * brilho acima e uma moldura com borda em degradê.
+ *
+ * Cada folha pode ter uma segunda imagem só para o celular (`imageMobile`): uma folha larga fica
+ * ilegível numa tela estreita. Cada versão declara o próprio tamanho, para a página não "pular"
+ * quando a imagem chega.
+ */
+const { showcase } = site
+---
+
+{
+  visible.vitrine && (
+    <section id="vitrine" class="section band-paper" data-section="vitrine" aria-labelledby="vitrine-title">
+      <div class="showcase-shell">
+        <div class="showcase-head" data-reveal>
+          <Heading id="vitrine-title" class="t-h2" parts={showcase} />
+          {showcase.lead && <p class="t-lead">{showcase.lead}</p>}
+        </div>
+
+        <header class="showcase-sub" data-reveal>
+          {showcase.stackTitle && (
+            <h3 class="t-h2 doc-stack__title">
+              <span class="shimmer">{showcase.stackTitle}</span>
+            </h3>
+          )}
+          {(showcase.note.text || showcase.note.emphasis) && (
+            <p class="doc-stack__note">
+              {showcase.note.text}{' '}
+              <strong class="doc-stack__note-emphasis">{showcase.note.emphasis}</strong>
+            </p>
+          )}
+        </header>
+
+        <div class="doc-stack">
+          {showcase.items.map((item, index) => (
+            <div class="doc-stack__item" data-reveal style={`--reveal-index:${index}`}>
+              <h4 class="doc-stack__doc-title shimmer" id={`vitrine-folha-${index + 1}`}>
+                {item.title}
+              </h4>
+              <figure class="doc-card grad-border" data-glow-card aria-labelledby={`vitrine-folha-${index + 1}`}>
+                <picture>
+                  {item.imageMobile && (
+                    <source
+                      media="(max-width: 767px)"
+                      srcset={item.imageMobile.src}
+                      width={item.imageMobile.width}
+                      height={item.imageMobile.height}
+                    />
+                  )}
+                  <img
+                    src={item.image.src}
+                    alt={item.image.alt}
+                    width={item.image.width}
+                    height={item.image.height}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </picture>
+              </figure>
+            </div>
+          ))}
+        </div>
+
+        {showcase.band.enabled && (
+          <div class="dark-band doc-stack__reinforcement" data-reveal>
+            <p class="doc-stack__reinforcement-title">{showcase.band.title}</p>
+            <p class="doc-stack__reinforcement-body">{showcase.band.text}</p>
+          </div>
+        )}
+
+        {showcase.closing.enabled && showcase.closing.text && (
+          <p class="doc-stack__closing">
+            <Icon name={showcase.closing.icon} class="doc-stack__closing-icon" />
+            <span class="shimmer">{showcase.closing.text}</span>
+          </p>
+        )}
+      </div>
+    </section>
+  )
+}

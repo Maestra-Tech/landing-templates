@@ -1,0 +1,65 @@
+---
+import type { TitleParts } from '@/site.config'
+
+/**
+ * Título com trecho de destaque.
+ *
+ * Recebe `title` (texto normal), `titleAccent` (o trecho com brilho) e `titleEnd` (o que vem
+ * depois do brilho). Com `words`, o título acende palavra por palavra ao entrar na tela.
+ *
+ * No modo palavra por palavra, cada palavra é um elemento e o brilho fica num elemento de dentro:
+ * o CSS só aceita uma animação por elemento, e aqui são duas (acender e brilhar).
+ */
+interface Props {
+  parts: TitleParts
+  as?: 'h1' | 'h2' | 'h3'
+  id?: string
+  class?: string
+  words?: boolean
+}
+
+const { parts, as: Tag = 'h2', id, class: className, words = false } = Astro.props
+const split = (text: string | undefined) => (text ?? '').trim().split(/\s+/).filter(Boolean)
+const lead = split(parts.title)
+const tail = split(parts.titleEnd)
+// Pontuação colada ("?", ".") não leva espaço antes.
+const glue = /^[.,;:!?…]/.test((parts.titleEnd ?? '').trimStart())
+---
+
+{
+  words ? (
+    <Tag id={id} class:list={[className, 'word-reveal']}>
+      {lead.map((word, index) => (
+        <>
+          {index > 0 && ' '}
+          <span class="word-reveal__word">{word}</span>
+        </>
+      ))}
+      {parts.titleAccent && (
+        <>
+          {' '}
+          <span class="word-reveal__word">
+            <span class="shimmer">{parts.titleAccent}</span>
+          </span>
+        </>
+      )}
+      {tail.map((word, index) => (
+        <>
+          {!(index === 0 && glue) && ' '}
+          <span class="word-reveal__word">{word}</span>
+        </>
+      ))}
+    </Tag>
+  ) : (
+    <Tag id={id} class={className}>
+      {parts.title}
+      {parts.titleAccent && (
+        <>
+          {' '}
+          <span class="shimmer">{parts.titleAccent}</span>
+        </>
+      )}
+      {parts.titleEnd && (glue ? parts.titleEnd.trimStart() : ` ${parts.titleEnd.trim()}`)}
+    </Tag>
+  )
+}

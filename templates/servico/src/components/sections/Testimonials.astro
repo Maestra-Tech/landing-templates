@@ -1,0 +1,71 @@
+---
+// DEPOIMENTOS — só aparece com "enabled: true" e depoimentos reais no config.
+import { site } from '../../site.config';
+import SectionHead from '../ui/SectionHead.astro';
+
+const testimonials = site.testimonials;
+const show = testimonials.enabled && testimonials.items.length > 0;
+---
+
+{
+  show && (
+    <section class="section" id="depoimentos">
+      <SectionHead eyebrow={testimonials.eyebrow} title={testimonials.title} titleAccent={testimonials.titleAccent} titleAfter={testimonials.titleAfter} text={testimonials.text} />
+      <div class="quotes">
+        {testimonials.items.map((item, index) => (
+          <figure class="card quote" data-reveal={(index * 0.05).toFixed(2)}>
+            <blockquote class="quote__text">{item.quote}</blockquote>
+            <figcaption class="quote__who">
+              <span class="quote__name">{item.name}</span>
+              {item.role && <span class="quote__role">{item.role}</span>}
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .quotes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    gap: clamp(16px, 2vw, 28px);
+  }
+
+  .quote {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+    margin: 0;
+    padding: clamp(22px, 2.4vw, 32px);
+  }
+
+  .quote__text {
+    margin: 0;
+    font-family: var(--font-decorative);
+    font-style: italic;
+    font-size: clamp(21px, 1.9vw, 26px);
+    line-height: 1.3;
+    color: var(--ink);
+  }
+
+  .quote__who {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .quote__name {
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .quote__role {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+  }
+</style>

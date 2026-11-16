@@ -1,0 +1,121 @@
+---
+// COMPARATIVO — "nós x alternativas": três cards empilhados que grudam no
+// topo ao rolar. Cada um tem nome, selo opcional, uma ilustração (mock) e um
+// texto. O último card ganha mais brilho e borda mais grossa.
+import { site } from '../../site.config';
+import SectionHead from '../ui/SectionHead.astro';
+import Mock from '../mocks/Mock.astro';
+import { rich } from '../../lib/rich';
+
+const compare = site.compare;
+const show = compare.enabled && compare.items.length > 0;
+const last = compare.items.length - 1;
+---
+
+{
+  show && (
+    <section class="section compare" id="comparativo">
+      <SectionHead eyebrow={compare.eyebrow} title={compare.title} titleAccent={compare.titleAccent} titleAfter={compare.titleAfter} text={compare.text} />
+
+      <div class="stack" data-stack-group>
+        {compare.items.map((item, index) => (
+          <article class:list={['stack-card', 'compare__card', { 'is-featured': index === last && last > 0 }]} data-stack style={`--i: ${index}; z-index: ${index + 1}`}>
+            <div class="stack-halo" aria-hidden="true" />
+            <div class="stack-surface compare__surface">
+              <div class="grain-layer" aria-hidden="true" />
+              <div class="compare__top">
+                <h3 class="compare__name">{item.name}</h3>
+                {item.badge && <span class="compare__badge">{item.badge}</span>}
+              </div>
+              <Mock mock={item.mock} wide />
+              <p class="compare__text">{item.text}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      {(compare.note || compare.bridge) && (
+        <div class="closing" data-reveal>
+          {compare.note && (
+            <div class="note-box">
+              <p class="closing__text compare__note rich" data-wordreveal set:html={rich(compare.note)} />
+            </div>
+          )}
+          {compare.bridge && (
+            <p class="bridge">
+              {compare.bridge} {compare.bridgeAccent && <span class="serif">{compare.bridgeAccent}</span>}
+            </p>
+          )}
+        </div>
+      )}
+    </section>
+  )
+}
+
+<style>
+  /* Cores do halo por posição (1º quente, 2º frio, último holográfico). */
+  .compare__card:nth-child(3n + 1) {
+    --halo: var(--halo-2);
+    --halo-opacity: 0.3;
+  }
+
+  .compare__card:nth-child(3n + 2) {
+    --halo: var(--halo-1);
+    --halo-opacity: 0.3;
+  }
+
+  .compare__card.is-featured {
+    --halo: var(--grad);
+    --halo-opacity: 0.75;
+    --stack-border: 2px;
+  }
+
+  .compare__surface {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 28px;
+  }
+
+  .compare__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .compare__name {
+    font-size: clamp(21px, 1.8vw, 24px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  /* Selo (ex.: "resolve"). */
+  .compare__badge {
+    flex: none;
+    padding: 4px 10px;
+    border: 1px solid color-mix(in srgb, var(--accent-1) 40%, transparent);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-5);
+  }
+
+  .compare__text {
+    font-size: clamp(16px, 1.2vw, 18px);
+    line-height: 1.6;
+    color: color-mix(in srgb, var(--ink) 90%, transparent);
+  }
+
+  .compare__note {
+    max-width: 900px;
+  }
+
+  @media (max-width: 767px) {
+    .compare__surface {
+      padding: 20px;
+    }
+  }
+</style>

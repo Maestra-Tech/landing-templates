@@ -1,0 +1,23 @@
+---
+// Cabeçalho padrão das seções: rótulo, título com destaque e frase de apoio.
+interface Props {
+  eyebrow?: string;
+  title: string;
+  titleAccent?: string;
+  titleAfter?: string;
+  text?: string;
+  /** Cor do destaque: 'holo' (todas), 'a' (fria), 'b' (quente), 'white'. */
+  accent?: 'holo' | 'a' | 'b' | 'white';
+}
+
+const { eyebrow, title, titleAccent, titleAfter, text, accent = 'holo' } = Astro.props;
+---
+
+<div class="section-head" data-reveal>
+  <slot name="before" />
+  {eyebrow && <span class="eyebrow">{eyebrow}</span>}
+  <h2 class="h2">
+    {title}{titleAccent && <>{' '}<span class:list={['accent', accent !== 'holo' && `accent--${accent}`]}>{titleAccent}</span></>}{titleAfter && ` ${titleAfter}`}
+  </h2>
+  {text && <p class="lede">{text}</p>}
+</div>

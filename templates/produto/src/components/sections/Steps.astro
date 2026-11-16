@@ -1,0 +1,37 @@
+---
+import Heading from '@/components/ui/Heading.astro'
+import { visible } from '@/lib/sections'
+import { site } from '@/site.config'
+
+/**
+ * O passo a passo, numa linha do tempo. O feixe do trilho acompanha a rolagem (CSS) e
+ * `scripts/timeline.ts` acende cada número, e põe brilho no título, quando a leitura chega nele.
+ */
+const { steps } = site
+---
+
+{
+  visible['como-funciona'] && (
+    <section id="como-funciona" class="section band-paper" data-section="como-funciona" aria-labelledby="como-funciona-title">
+      <div class="section__shell section__shell--narrow">
+        <header class="section__header" data-reveal>
+          <Heading id="como-funciona-title" class="t-h2" parts={steps} />
+        </header>
+
+        <ol class="timeline" role="list" data-timeline>
+          {steps.items.map((step, index) => (
+            <li data-reveal data-timeline-step={String(index)} style={`--reveal-index:${index}`}>
+              <span class="timeline__index">{String(index + 1).padStart(2, '0')}</span>
+              <span class="timeline__body">
+                <span class="t-h3" data-timeline-title>
+                  {step.title}
+                </span>
+                {step.text && <span class="timeline__text">{step.text}</span>}
+              </span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  )
+}

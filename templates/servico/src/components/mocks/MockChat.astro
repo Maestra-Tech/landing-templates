@@ -1,0 +1,302 @@
+---
+// MOCK · conversa estilo aplicativo de mensagens.
+// "phone" = versão que preenche a tela do celular da seção de case.
+import type { ChatMessage, Tone } from '../../site.config';
+
+interface Props {
+  name: string;
+  avatar: string;
+  status?: string;
+  messages: ChatMessage[];
+  typing?: boolean;
+  footer?: string;
+  footerTone?: Tone;
+  phone?: boolean;
+  [key: string]: unknown;
+}
+
+const { name, avatar, status, messages, typing = false, footer, footerTone = 'neutral', phone = false } = Astro.props;
+---
+
+<div class:list={['chat', { 'chat--phone': phone, 'chat--live': Boolean(status) }]}>
+  <div class="chat__head">
+    <span class="chat__avatar" aria-hidden="true">{avatar}</span>
+    <span class="chat__who">
+      <span class="chat__name">{name}</span>
+      {status && <span class="chat__status"><span class="chat__dot"></span>{status}</span>}
+    </span>
+    {status && <span class="chat__menu" aria-hidden="true">⋮</span>}
+  </div>
+  <div class="chat__body">
+    {
+      messages.map((message) => (
+        <div class:list={['bubble', `bubble--${message.side}`]}>
+          <span class="bubble__text">{message.text}</span>
+          {message.checks && (
+            <span class="bubble__checks">
+              {message.checks.map((check) => (
+                <span><span aria-hidden="true">✓</span> {check}</span>
+              ))}
+            </span>
+          )}
+          {message.time && (
+            <span class="bubble__meta">
+              {message.time}
+              {message.side === 'right' && <span class="bubble__ticks" aria-hidden="true">✓✓</span>}
+            </span>
+          )}
+        </div>
+      ))
+    }
+    {typing && <div class="chat__typing" aria-hidden="true"><span></span><span></span><span></span></div>}
+    {footer && <span class:list={['chat__foot', `tone-${footerTone}`]}><span class="chat__foot-dot"></span>{footer}</span>}
+  </div>
+</div>
+
+<style>
+  .chat {
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--bg-raised);
+    box-shadow: var(--shadow-mock);
+    text-align: left;
+  }
+
+  .chat--live {
+    border-color: color-mix(in srgb, var(--accent-1) 18%, transparent);
+  }
+
+  .chat__head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--neutral-700);
+    border-bottom: 1px solid color-mix(in srgb, var(--bg) 35%, transparent);
+  }
+
+  .chat__avatar {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--glass-strong);
+    color: var(--ink-muted);
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  /* Com "status" (atendente de verdade), o avatar ganha o gradiente. */
+  .chat--live .chat__avatar {
+    background: var(--grad-a);
+    color: var(--on-accent);
+    box-shadow: inset 0 1px 1px color-mix(in srgb, var(--ink) 40%, transparent);
+  }
+
+  .chat__who {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+  }
+
+  .chat__name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--neutral-100);
+  }
+
+  .chat__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+    color: var(--neutral-300);
+  }
+
+  .chat__dot,
+  .chat__foot-dot {
+    flex: none;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-1);
+    box-shadow: 0 0 6px color-mix(in srgb, var(--accent-1) 80%, transparent);
+  }
+
+  .chat__menu {
+    font-size: 18px;
+    color: var(--neutral-300);
+  }
+
+  .chat__body {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    padding: 14px 12px;
+    background-color: var(--bg-raised);
+    background-image: var(--dots);
+    background-size: 15px 15px;
+  }
+
+  .bubble {
+    max-width: 86%;
+    padding: 7px 10px 4px;
+    box-shadow: 0 1px 1px color-mix(in srgb, var(--bg) 30%, transparent);
+  }
+
+  .bubble--right {
+    align-self: flex-end;
+    border-radius: var(--radius-sm) var(--radius-sm) var(--radius-xs) var(--radius-sm);
+    background: var(--bubble-out);
+  }
+
+  .bubble--left {
+    align-self: flex-start;
+    border-radius: var(--radius-sm) var(--radius-sm) var(--radius-sm) var(--radius-xs);
+    background: var(--bubble-in);
+    padding-bottom: 7px;
+  }
+
+  .bubble__text {
+    display: block;
+    font-size: 15px;
+    line-height: 1.45;
+    color: var(--ink);
+  }
+
+  .bubble--left .bubble__text {
+    color: var(--neutral-100);
+  }
+
+  .bubble__checks {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-top: 7px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--accent-1);
+  }
+
+  .bubble__meta {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 4px;
+    margin-top: 1px;
+    font-size: 12px;
+    color: var(--neutral-300);
+  }
+
+  .bubble--right .bubble__meta {
+    color: color-mix(in srgb, var(--ink) 94%, transparent);
+  }
+
+  .bubble__ticks {
+    color: var(--accent-2);
+    font-size: 13px;
+    letter-spacing: -2px;
+  }
+
+  /* Três pontinhos de "digitando". */
+  .chat__typing {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 9px 12px;
+    border-radius: var(--radius-sm);
+    background: var(--bubble-in);
+  }
+
+  .chat__typing span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--neutral-300);
+  }
+
+  .chat__typing span:nth-child(1) {
+    animation: phoneFloat 1s ease-in-out infinite alternate;
+  }
+
+  .chat__typing span:nth-child(2) {
+    opacity: 0.6;
+  }
+
+  .chat__typing span:nth-child(3) {
+    opacity: 0.35;
+  }
+
+  /* Linha de situação no fim da conversa. */
+  .chat__foot {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 2px;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+  }
+
+  .chat__foot-dot {
+    width: 5px;
+    height: 5px;
+    background: currentColor;
+    box-shadow: none;
+  }
+
+  .tone-good {
+    color: var(--tone-good);
+  }
+
+  .tone-good .chat__foot-dot {
+    box-shadow: 0 0 6px color-mix(in srgb, var(--tone-good) 80%, transparent);
+  }
+
+  .tone-bad {
+    color: var(--tone-bad);
+  }
+
+  .tone-info {
+    color: var(--tone-info);
+  }
+
+  /* ---- Versão para a tela do celular ---- */
+  .chat--phone {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .chat--phone .chat__head {
+    padding: 34px 12px 10px;
+  }
+
+  .chat--phone .chat__body {
+    flex: 1;
+    justify-content: flex-start;
+    gap: 9px;
+    padding: 16px 10px;
+  }
+
+  .chat--phone .bubble__text {
+    font-size: 13.5px;
+  }
+
+  .chat--phone .bubble__checks,
+  .chat--phone .bubble__meta {
+    font-size: 11px;
+  }
+</style>

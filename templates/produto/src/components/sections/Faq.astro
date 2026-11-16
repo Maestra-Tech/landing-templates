@@ -1,0 +1,32 @@
+---
+import Disclosure from '@/components/ui/Disclosure.astro'
+import Heading from '@/components/ui/Heading.astro'
+import { visible } from '@/lib/sections'
+import { site } from '@/site.config'
+
+/**
+ * As dúvidas frequentes. Cada item nasce fechado, mas a resposta já está no HTML: é o que os
+ * buscadores leem. Mais de um item pode ficar aberto ao mesmo tempo, para comparar respostas.
+ */
+const { faq } = site
+---
+
+{
+  visible.faq && (
+    <section id="faq" class="section band-paper" data-section="faq" aria-labelledby="faq-title">
+      <div class="faq-shell">
+        <header data-reveal>
+          <Heading id="faq-title" class="t-h2" parts={faq} />
+        </header>
+
+        <div>
+          {faq.items.map((item) => (
+            <Disclosure question={item.question}>
+              <p>{item.answer}</p>
+            </Disclosure>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}

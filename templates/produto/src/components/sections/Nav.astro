@@ -1,0 +1,56 @@
+---
+import Brand from '@/components/ui/Brand.astro'
+import Cta from '@/components/ui/Cta.astro'
+import { linkIsAlive } from '@/lib/sections'
+import { site } from '@/site.config'
+
+/**
+ * A barra do topo: marca, atalhos, entrada, botão principal e a faixa de aviso.
+ *
+ * Os atalhos aparecem só em telas grandes, e um atalho para uma seção desligada some sozinho.
+ * No celular a barra tem duas linhas (marca e entrada em cima, botão embaixo); ver `nav.css`.
+ */
+const { nav, brand } = site
+const links = nav.links.filter((link) => linkIsAlive(link.href))
+const showAnnouncement = nav.announcement.enabled && nav.announcement.text.trim().length > 0
+---
+
+<header class="site-header" data-site-header>
+  <nav aria-label="Navegação principal" class="site-header-nav">
+    <div class="site-header-row">
+      <a href="#conteudo" class="site-header__brand" aria-label={`${brand.name}, início`}>
+        <Brand />
+      </a>
+
+      {
+        links.length > 0 && (
+          <ul class="site-header__links">
+            {links.map((link) => (
+              <li>
+                <a href={link.href}>{link.label}</a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+
+      {nav.login.enabled && <a href={nav.login.href} class="nav-entry">{nav.login.label}</a>}
+      <Cta size="md" class="nav-cta" />
+    </div>
+  </nav>
+
+  {
+    showAnnouncement && (
+      <div class="site-header-offer">
+        <p class="site-header-offer__text">
+          <span class="signal-dot" aria-hidden="true" />
+          {nav.announcement.href ? (
+            <a href={nav.announcement.href}>{nav.announcement.text}</a>
+          ) : (
+            <span>{nav.announcement.text}</span>
+          )}
+        </p>
+      </div>
+    )
+  }
+</header>

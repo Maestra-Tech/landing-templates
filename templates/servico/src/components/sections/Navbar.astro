@@ -1,0 +1,153 @@
+---
+// MENU DO TOPO — nome/logo à esquerda, atalhos e botão de contato à direita.
+// Fica fixo; ganha fundo de vidro ao rolar (src/scripts/header.ts, efeito "navGlass").
+import { site } from '../../site.config';
+import { contactHref, isExternal } from '../../lib/contact';
+
+const href = contactHref();
+const external = isExternal(href);
+
+// Esconde atalhos que apontam para seções desligadas ou sem itens.
+const visible: Record<string, boolean> = {
+  '#numeros': site.stats.enabled && site.stats.items.length > 0,
+  '#comparativo': site.compare.enabled && site.compare.items.length > 0,
+  '#servicos': site.offers.enabled && site.offers.items.length > 0,
+  '#como-funciona': site.process.enabled && site.process.items.length > 0,
+  '#case': site.caseStudy.enabled,
+  '#depoimentos': site.testimonials.enabled && site.testimonials.items.length > 0,
+  '#duvidas': site.faq.enabled && site.faq.items.length > 0,
+};
+const links = site.nav.links.filter((link) => visible[link.href] ?? true);
+---
+
+<header class="nav" data-nav>
+  <a class="nav__brand" href="#topo" aria-label={`${site.name} — voltar ao topo`}>
+    {site.logo.src ? <img src={site.logo.src} alt={site.logo.alt} /> : <span>{site.name}</span>}
+  </a>
+
+  <nav class="nav__menu" aria-label="Principal">
+    {
+      links.length > 0 && (
+        <ul class="nav__links">
+          {links.map((link) => (
+            <li>
+              <a href={link.href}>{link.label}</a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+    <span class="nav__cta-frame holo-frame">
+      <a class="nav__cta" href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener' : undefined}>
+        {site.nav.ctaLabel}
+      </a>
+    </span>
+  </nav>
+</header>
+
+<style>
+  .nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: clamp(10px, 3vw, 24px);
+    min-height: var(--nav-height);
+    padding: 12px var(--gutter);
+    border-bottom: 1px solid transparent;
+    transition: background 300ms ease-out, border-color 300ms ease-out;
+  }
+
+  /* Estado "rolou a página": fundo de vidro. */
+  .nav:global(.is-scrolled) {
+    background: var(--nav-scrolled);
+    border-bottom-color: var(--line);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+  }
+
+  .nav__brand {
+    flex: 0 1 auto;
+    min-width: 0;
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-size: clamp(17px, 2.4vw, 21px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    text-decoration: none;
+  }
+
+  .nav__brand img {
+    width: auto;
+    height: clamp(22px, 6vw, 30px);
+  }
+
+  .nav__menu {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: clamp(16px, 2.5vw, 32px);
+  }
+
+  .nav__links {
+    display: none;
+    gap: clamp(16px, 2.2vw, 28px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nav__links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--ink-muted);
+    font-size: 15px;
+    text-decoration: none;
+    transition: color 200ms ease-out;
+  }
+
+  .nav__links a:hover {
+    color: var(--ink);
+  }
+
+  /* Os atalhos só aparecem quando há largura para eles. */
+  @media (min-width: 900px) {
+    .nav__links {
+      display: flex;
+    }
+  }
+
+  /* A moldura com o gradiente correndo (.holo-frame) está em global.css. */
+  .nav__cta-frame {
+    flex: 0 1 auto;
+  }
+
+  .nav__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 8px clamp(12px, 2.5vw, 20px);
+    border-radius: var(--radius-control);
+    box-shadow: var(--glass-shine);
+    background: var(--grad-button-dark);
+    color: var(--ink);
+    font-size: clamp(13px, 3.4vw, 15px);
+    font-weight: 500;
+    line-height: 1.2;
+    text-align: center;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 250ms ease-out;
+  }
+
+  .nav__cta:hover {
+    background: color-mix(in srgb, var(--bg-raised), var(--ink) 9%);
+  }
+</style>

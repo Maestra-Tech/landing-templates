@@ -1,0 +1,27 @@
+---
+import CompareDuo from '@/components/ui/CompareDuo.astro'
+import Heading from '@/components/ui/Heading.astro'
+import { visible } from '@/lib/sections'
+import { site } from '@/site.config'
+
+/** Antes e depois: a mesma forma de dois cards do comparativo, com listas simples. */
+const { beforeAfter } = site
+const rows = (items: string[]) => items.map((text) => ({ text }))
+---
+
+{
+  visible['antes-depois'] && (
+    <section id="antes-depois" class="section band-paper" data-section="antes-depois" aria-labelledby="antes-depois-title">
+      <div class="section__shell">
+        <header class="section__header" data-reveal>
+          <Heading id="antes-depois-title" class="t-h2" parts={beforeAfter} />
+        </header>
+
+        <CompareDuo
+          dim={{ title: beforeAfter.before.title, items: rows(beforeAfter.before.items) }}
+          bright={{ title: beforeAfter.after.title, items: rows(beforeAfter.after.items) }}
+        />
+      </div>
+    </section>
+  )
+}

@@ -1,0 +1,30 @@
+---
+/**
+ * O selo de "confere" — um desenho genérico (medalhão recortado com um visto), pintado com o
+ * degradê da marca. O degradê é definido uma vez só, em `layouts/Base.astro` (`#seal-grad`).
+ */
+interface Props {
+  class?: string
+}
+
+const { class: className } = Astro.props
+const lobes = Array.from({ length: 10 }, (_, i) => {
+  const angle = (i / 10) * Math.PI * 2
+  return { cx: (12 + Math.cos(angle) * 7.6).toFixed(2), cy: (12 + Math.sin(angle) * 7.6).toFixed(2) }
+})
+---
+
+<svg class:list={['seal', className]} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+  <g fill="url(#seal-grad)">
+    <circle cx="12" cy="12" r="8.4"></circle>
+    {lobes.map((lobe) => <circle cx={lobe.cx} cy={lobe.cy} r="3.1" />)}
+  </g>
+  <path
+    d="M7.9 12.3l2.7 2.7 5.5-5.8"
+    fill="none"
+    style="stroke: var(--on-grad)"
+    stroke-width="2.1"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  ></path>
+</svg>

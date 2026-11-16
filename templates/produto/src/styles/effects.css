@@ -1,0 +1,125 @@
+/* ============================================================
+   INTERRUPTORES DE EFEITO
+
+   Cada efeito desligado em `effects` (no `src/site.config.ts`) aparece no atributo `data-fx-off`
+   da página, e as regras abaixo o neutralizam. Você não precisa editar este arquivo: ligue e
+   desligue pelo config. Os efeitos que dependem só de script (holofote, atração do botão,
+   sincronia da demonstração etc.) são desligados lá no próprio script.
+   ============================================================ */
+
+/* shimmer — o título fica com uma cor sólida da marca. */
+html[data-fx-off~='shimmer'] .shimmer {
+  animation: none;
+  background: none;
+  -webkit-text-fill-color: var(--primary-400);
+  color: var(--primary-400);
+  mask-image: none;
+  -webkit-mask-image: none;
+}
+
+html[data-fx-off~='shimmer'] :is(.band-paper, .grad-border) .shimmer {
+  -webkit-text-fill-color: var(--primary-700);
+  color: var(--primary-700);
+}
+
+/* wordReveal — as palavras já nascem acesas. */
+html[data-fx-off~='wordReveal'] .word-reveal__word {
+  opacity: 1;
+  animation: none;
+}
+
+/* heroAtmosphere — o fundo do começo da página fica parado. */
+html[data-fx-off~='heroAtmosphere'] :is(.hero-atmosphere__orb, .hero-atmosphere__beam) {
+  animation: none;
+}
+
+/* marquee — a esteira de logos vira uma grade parada. */
+html[data-fx-off~='marquee'] .logo-marquee {
+  overflow: visible;
+  mask-image: none;
+  padding-inline: var(--s-4);
+}
+
+html[data-fx-off~='marquee'] .logo-marquee__track {
+  animation: none;
+  inline-size: auto;
+  will-change: auto;
+}
+
+html[data-fx-off~='marquee'] .logo-marquee__row[aria-hidden='true'] {
+  display: none;
+}
+
+html[data-fx-off~='marquee'] .logo-marquee__row {
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--s-3) var(--s-5);
+  padding: 0;
+  max-inline-size: var(--shell-wide);
+  margin-inline: auto;
+}
+
+/* ctaShine — o botão principal perde o feixe da borda e a varredura (o degradê continua). */
+html[data-fx-off~='ctaShine'] .cta-signature::after,
+html[data-fx-off~='ctaShine'] .cta-signature > .cta-shine {
+  display: none;
+}
+
+/* ctaGlow — o brilho colorido que vaza por trás do botão principal. */
+html[data-fx-off~='ctaGlow'] .cta-signature::before {
+  display: none;
+}
+
+/* borderBeam — o feixe de luz que corre pela borda dos cards e da pílula ativa. */
+html[data-fx-off~='borderBeam'] .grad-border::after {
+  animation: none;
+  background: radial-gradient(
+    240px circle at var(--glow-x, -400px) var(--glow-y, -400px),
+    var(--primary-200),
+    transparent 62%
+  );
+}
+
+html[data-fx-off~='borderBeam'] .jpill[aria-current='true']::after {
+  display: none;
+}
+
+/* cardHalo — a luz colorida que vaza por trás dos cards com borda em degradê. */
+html[data-fx-off~='cardHalo'] .grad-border::before {
+  display: none;
+}
+
+/* pillSweep — a varredura metálica da pílula ativa da demonstração. */
+html[data-fx-off~='pillSweep'] .jpill[aria-current='true'] {
+  animation: none;
+}
+
+/* stackedCards — no celular, os cards de funcionalidade viram uma lista comum. */
+html[data-fx-off~='stackedCards'] .bento > [data-feature] {
+  position: static;
+}
+
+/* timeline — o trilho já nasce preenchido (o script acende todos os números). */
+html[data-fx-off~='timeline'] .timeline::after {
+  animation: none;
+  transform: none;
+}
+
+/* stickyDemo — o celular da demonstração deixa de ficar fixo no computador. */
+html[data-fx-off~='stickyDemo'] .jstage {
+  position: relative;
+  inset-block-start: auto;
+}
+
+/* stickyRail — o índice lateral do "Por dentro" deixa de ficar fixo. */
+html[data-fx-off~='stickyRail'] .mech-rail {
+  position: static;
+}
+
+/* textures — o grão e a grade fina de fundo. */
+html[data-fx-off~='textures'] .grain-layer,
+html[data-fx-off~='textures'] .surface-shell::after,
+html[data-fx-off~='textures'] .band-paper::after,
+html[data-fx-off~='textures'] .site-footer::after {
+  display: none;
+}

@@ -1,0 +1,30 @@
+---
+import { site } from '@/site.config'
+
+/**
+ * O botão principal da página.
+ *
+ * É um link de verdade (`<a href>`): funciona sem JavaScript, com "abrir em nova aba" e com o
+ * clique do meio. Sem `label`/`href`, usa os do bloco `cta` do config.
+ *
+ * As camadas de brilho (classe `cta-signature`) são só CSS; o `<span class="cta-shine">` é o
+ * recorte da varredura de luz e não tem texto, então o nome lido por leitores de tela é só o rótulo.
+ */
+interface Props {
+  label?: string
+  href?: string
+  size?: 'md' | 'lg'
+  class?: string
+}
+
+const { label = site.cta.label, href = site.cta.href, size = 'lg', class: className } = Astro.props
+---
+
+<a
+  href={href}
+  data-cta
+  class:list={['btn', 'btn--primary', size === 'md' && 'btn--md', 'cta-signature', className]}
+>
+  <span class="cta-shine" aria-hidden="true"></span>
+  <span class="cta-label">{label}</span>
+</a>

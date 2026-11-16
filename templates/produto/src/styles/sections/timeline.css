@@ -1,0 +1,122 @@
+/* ============================================================
+   PASSO A PASSO — a linha do tempo.
+
+   Um trilho vertical passa atrás dos números. Conforme a página rola, um feixe em degradê preenche
+   o trilho, e cada número acende quando a leitura chega nele. O acendimento é permanente: o passo
+   já lido continua aceso.
+   ============================================================ */
+.timeline {
+  --tl-index-size: 28px;
+  --tl-track-w: 3px;
+  --tl-track-x: calc((var(--tl-index-size) - var(--tl-track-w)) / 2);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  inline-size: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.timeline::before,
+.timeline::after {
+  content: '';
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: var(--tl-track-x);
+  width: var(--tl-track-w);
+  height: 100%;
+  border-radius: var(--radius-pill);
+  z-index: 0;
+}
+
+.timeline::before {
+  background: color-mix(in oklab, var(--paper-ink) 12%, transparent);
+}
+
+.timeline::after {
+  background: linear-gradient(var(--primary-500), var(--secondary-500), var(--signal-500));
+  box-shadow: 0 0 12px -2px color-mix(in oklab, var(--primary-500) 55%, transparent);
+  transform-origin: top;
+}
+
+/* O feixe acompanha a rolagem onde o navegador sabe fazer isso; nos demais, o trilho já nasce
+   preenchido. Propriedades por extenso: o atalho `animation` quebraria na minificação. */
+@supports (animation-timeline: view()) {
+  .timeline::after {
+    animation-name: timeline-beam;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: view();
+    animation-range: contain 0% contain 100%;
+  }
+}
+
+@keyframes timeline-beam {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+.timeline > li {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  padding-block: var(--s-4);
+}
+
+.timeline__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-inline-size: 0;
+}
+
+.timeline__text {
+  font-size: var(--t-body);
+  line-height: 1.6;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+/* ---------- Número apagado ---------- */
+.timeline__index {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  display: grid;
+  place-items: center;
+  inline-size: var(--tl-index-size);
+  block-size: var(--tl-index-size);
+  border-radius: var(--radius-pill);
+  /* Fundo próprio e opaco: é ele que tapa o trilho. */
+  background: var(--paper);
+  border: 1px solid color-mix(in oklab, var(--paper-ink) 16%, transparent);
+  color: var(--paper-ink3);
+  font-family: var(--font-body);
+  font-size: var(--t-mono);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  box-shadow: 0 0 0 4px var(--paper-2);
+  transition:
+    background-color var(--dur-layout) var(--ease-out),
+    border-color var(--dur-layout) var(--ease-out),
+    color var(--dur-layout) var(--ease-out),
+    box-shadow var(--dur-layout) var(--ease-out);
+}
+
+/* ---------- Número aceso (atributo escrito por `scripts/timeline.ts`) ---------- */
+[data-timeline-reached='true'] .timeline__index {
+  background: color-mix(in oklab, var(--primary-500) 12%, var(--paper));
+  border-color: color-mix(in oklab, var(--primary-500) 62%, transparent);
+  color: var(--primary-700);
+  box-shadow:
+    0 0 0 4px var(--paper-2),
+    0 0 14px -2px color-mix(in oklab, var(--primary-500) 50%, transparent);
+}

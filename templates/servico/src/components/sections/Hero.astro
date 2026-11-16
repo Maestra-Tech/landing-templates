@@ -1,0 +1,289 @@
+---
+// TOPO (HERO) — título com destaque, apoio, botão magnético e a "régua" de
+// termos. Fundo: a imagem do config ou, sem imagem, um gradiente animado.
+import { site } from '../../site.config';
+import CtaButton from '../ui/CtaButton.astro';
+
+const hero = site.hero;
+const showRail = hero.rail.enabled && hero.rail.items.length > 0;
+const hasImage = hero.image.src !== '';
+
+// "glow" do config -> gradiente do destaque e do brilho do botão.
+const GLOW = { holo: 'var(--grad-text)', cta: 'var(--grad-cta)', a: 'var(--grad-a)', b: 'var(--grad-b)' };
+const glowText = GLOW[hero.glow] ?? GLOW.holo;
+const glowCta = hero.glow === 'holo' ? GLOW.cta : glowText;
+---
+
+<section class="hero" id="topo" style={`--hero-glow: ${glowText}; --cta-glow: ${glowCta}`}>
+  {
+    hasImage ? (
+      <div class="hero__backdrop hero__backdrop--image" style={`background-image: url('${hero.image.src}')`} role={hero.image.alt ? 'img' : undefined} aria-label={hero.image.alt || undefined} />
+    ) : (
+      <div class="hero__backdrop hero__backdrop--mesh" aria-hidden="true" />
+    )
+  }
+  <div class="hero__overlay" aria-hidden="true"></div>
+  <div class="hero__fade" aria-hidden="true"></div>
+
+  <div class="hero__content">
+    <h1 class="hero__title intro">
+      {hero.title}{hero.titleAccent && <>{' '}<span class="accent accent--plain">{hero.titleAccent}</span></>}
+    </h1>
+    {
+      (hero.leadAccent || hero.lead) && (
+        <p class="hero__lead intro" style="--intro-delay: 0.1s">
+          {hero.leadAccent && <span class="grad-text hero__glow-word">{hero.leadAccent}</span>} {hero.lead}
+        </p>
+      )
+    }
+    {hero.text && <p class="hero__text intro" style="--intro-delay: 0.2s">{hero.text}</p>}
+    <div class="hero__actions intro" style="--intro-delay: 0.3s">
+      <CtaButton label={hero.ctaLabel} />
+      {hero.ctaNote && <p class="fine-print">{hero.ctaNote}</p>}
+    </div>
+  </div>
+
+  {
+    showRail && (
+      <div class="hero__rail-wrap">
+        <div class="hero__rail-surface">
+          <ul class="hero__rail" data-rail>
+            {hero.rail.items.map((item, index) => (
+              <li class="hero__rail-item intro" data-g={(index % 3) + 1} style={`--intro-delay: ${(0.45 + index * 0.08).toFixed(2)}s`}>
+                <span class="hero__term" data-term>{item.term}</span>
+                <span class="hero__def">{item.description}</span>
+                <span class="hero__wire" aria-hidden="true" />
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    )
+  }
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 100vh;
+    min-height: 100svh;
+    overflow: hidden;
+    color: var(--ink);
+  }
+
+  /* ---- Fundo ---- */
+  .hero__backdrop {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .hero__backdrop--image {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 64% 42%;
+    filter: brightness(0.58) saturate(0.88) contrast(1.08);
+    transform: scale(1.025);
+  }
+
+  /* Sem imagem: manchas de cor desfocadas que se movem devagar. */
+  .hero__backdrop--mesh {
+    inset: -10%;
+    background:
+      radial-gradient(60% 55% at 78% 22%, color-mix(in srgb, var(--accent-3) 55%, transparent) 0%, transparent 62%),
+      radial-gradient(50% 50% at 92% 70%, color-mix(in srgb, var(--accent-4) 42%, transparent) 0%, transparent 60%),
+      radial-gradient(55% 60% at 55% 95%, color-mix(in srgb, var(--accent-2) 36%, transparent) 0%, transparent 62%),
+      radial-gradient(45% 45% at 40% 10%, color-mix(in srgb, var(--accent-1) 26%, transparent) 0%, transparent 60%),
+      var(--bg);
+    filter: blur(20px);
+    animation: drift 18s ease-in-out infinite;
+  }
+
+  .hero__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: var(--hero-overlay);
+  }
+
+  .hero__fade {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    height: 256px;
+    background: var(--fade-bottom);
+  }
+
+  /* ---- Texto ---- */
+  .hero__content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: var(--container);
+    margin-inline: auto;
+    padding: calc(var(--nav-height) + clamp(24px, 8vh, 96px)) var(--gutter) clamp(20px, 4vh, 48px);
+  }
+
+  .hero__title {
+    max-width: 1100px;
+    font-size: clamp(38px, 6.6vw, 92px);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+  }
+
+  .hero__lead {
+    max-width: 800px;
+    margin-top: clamp(20px, 3vh, 28px);
+    font-size: clamp(20px, 2.2vw, 29px);
+    line-height: 1.45;
+    color: var(--ink-soft);
+  }
+
+  /* Trecho colorido do apoio: a cor vem do campo "glow" do config. */
+  .hero__glow-word {
+    background-image: var(--hero-glow);
+  }
+
+  .hero__text {
+    max-width: 640px;
+    margin-top: clamp(14px, 2vh, 20px);
+    font-size: clamp(16px, 1.4vw, 18px);
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+
+  .hero__actions {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: clamp(28px, 4vh, 40px);
+  }
+
+  /* ---- Régua de termos ---- */
+  .hero__rail-wrap {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: var(--container);
+    margin-inline: auto;
+    padding: 0 var(--gutter) clamp(16px, 3vh, 36px);
+  }
+
+  .hero__rail-surface {
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--glass);
+    -webkit-backdrop-filter: var(--glass-blur);
+    backdrop-filter: var(--glass-blur);
+    box-shadow: var(--shadow-card);
+  }
+
+  .hero__rail {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    margin: 0 0 0 -1px; /* esconde a linha divisória da primeira coluna */
+    padding: 0;
+    list-style: none;
+  }
+
+  .hero__rail-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: clamp(20px, 2vw, 32px) clamp(16px, 1.8vw, 28px);
+    border-left: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+    cursor: default;
+  }
+
+  .hero__term {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--ink) 90%, transparent);
+    transition: color 300ms ease-out;
+  }
+
+  .hero__def {
+    font-size: clamp(15px, 1.05vw, 17px);
+    line-height: 1.6;
+    color: color-mix(in srgb, var(--ink) 90%, transparent);
+    transition: color 300ms ease-out;
+  }
+
+  /* Fio colorido no pé do item. */
+  .hero__wire {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--shimmer);
+    opacity: 0;
+    transition: opacity 300ms ease-out;
+    pointer-events: none;
+  }
+
+  /* Cada item usa um gradiente (1, 2, 3, 1...). */
+  .hero__rail-item[data-g="1"] { --shimmer: var(--grad-cta); }
+  .hero__rail-item[data-g="2"] { --shimmer: var(--grad-a); }
+  .hero__rail-item[data-g="3"] { --shimmer: var(--grad-b); }
+
+  /* Estado ativo (mouse em cima): o script src/scripts/rail.ts põe a classe
+     .is-active por 1,25 s. O termo brilha, o fio acende, o texto engrossa. */
+  .hero__rail-item:global(.is-active) .hero__wire {
+    opacity: 1;
+  }
+
+  .hero__rail-item:global(.is-active) .hero__def {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  @supports ((-webkit-background-clip: text) or (background-clip: text)) {
+    .hero__rail-item:global(.is-active) .hero__term {
+      background-image: var(--shimmer);
+      background-size: 200% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: holoFlow 1.2s ease-out 1;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .hero__overlay {
+      background: var(--hero-overlay-mobile);
+    }
+
+    .hero__backdrop--image {
+      background-position: 58% 28%;
+      filter: brightness(0.52) saturate(0.86) contrast(1.06);
+    }
+
+    .hero__rail {
+      grid-template-columns: minmax(0, 1fr);
+      margin-left: 0;
+    }
+
+    .hero__rail-item {
+      border-left: 0;
+      border-top: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+    }
+
+    .hero__rail-item:first-child {
+      border-top: 0;
+    }
+  }
+</style>

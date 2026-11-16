@@ -1,0 +1,154 @@
+---
+// MOCK · linha do tempo de etapas (pontos ligados por um fio colorido).
+// As cores dos pontos seguem a paleta; a última etapa ganha brilho.
+interface Props {
+  label: string;
+  badge?: string;
+  steps: { tag?: string; text: string; meta?: string }[];
+  [key: string]: unknown;
+}
+
+const { label, badge, steps } = Astro.props;
+const palette = ['var(--accent-3)', 'var(--accent-2)', 'var(--accent-1)'];
+const last = steps.length - 1;
+const colorOf = (index: number) => (index === last ? 'var(--accent-4)' : palette[Math.min(index, palette.length - 1)]);
+---
+
+<div class="timeline">
+  <div class="timeline__head">
+    <span class="timeline__label">{label}</span>
+    {badge && <span class="timeline__badge">{badge}</span>}
+  </div>
+  <ol class="timeline__steps">
+    {
+      steps.map((step, index) => (
+        <li class:list={['timeline__step', { 'is-last': index === last }]} style={`--c: ${colorOf(index)}; --c-next: ${colorOf(index + 1)}`}>
+          <span class="timeline__row">
+            <span class="timeline__dot" aria-hidden="true" />
+            <span class="timeline__what">
+              {step.tag && <span class="timeline__tag">{step.tag}</span>}
+              <span class="timeline__text">{step.text}</span>
+            </span>
+            {step.meta && <span class="timeline__meta">{step.meta}</span>}
+          </span>
+          {index !== last && <span class="timeline__wire" aria-hidden="true" />}
+        </li>
+      ))
+    }
+  </ol>
+</div>
+
+<style>
+  .timeline {
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: linear-gradient(180deg, var(--neutral-800), var(--bg-raised));
+    box-shadow: var(--shadow-mock);
+    font-family: var(--font-mono);
+    text-align: left;
+  }
+
+  .timeline__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+  }
+
+  .timeline__label {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--ink) 72%, transparent);
+  }
+
+  .timeline__badge {
+    padding: 2px 9px;
+    border: 1px solid color-mix(in srgb, var(--accent-3) 35%, transparent);
+    border-radius: var(--radius-pill);
+    font-size: 12px;
+    color: var(--accent-3);
+    white-space: nowrap;
+  }
+
+  .timeline__steps {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 12px 0 0;
+    list-style: none;
+  }
+
+  .timeline__row {
+    display: grid;
+    grid-template-columns: 14px 1fr auto;
+    align-items: center;
+    gap: 9px;
+  }
+
+  .timeline__dot {
+    justify-self: center;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--c);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--c) 14%, transparent);
+  }
+
+  .is-last .timeline__dot {
+    width: 9px;
+    height: 9px;
+    box-shadow: 0 0 10px color-mix(in srgb, var(--c) 70%, transparent), 0 0 0 3px color-mix(in srgb, var(--c) 18%, transparent);
+  }
+
+  .timeline__what {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .timeline__tag {
+    flex: none;
+    padding: 1px 5px;
+    border-radius: var(--radius-xs);
+    background: color-mix(in srgb, var(--c) 10%, transparent);
+    font-size: 12px;
+    color: var(--c);
+  }
+
+  .timeline__text {
+    overflow: hidden;
+    font-size: 13.5px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: color-mix(in srgb, var(--ink) 90%, transparent);
+  }
+
+  .is-last .timeline__text {
+    color: var(--ink);
+  }
+
+  .timeline__meta {
+    font-size: 12px;
+    color: color-mix(in srgb, var(--ink) 58%, transparent);
+    white-space: nowrap;
+  }
+
+  .is-last .timeline__meta {
+    color: var(--c);
+  }
+
+  /* Fio entre uma etapa e a próxima. */
+  .timeline__wire {
+    display: block;
+    width: 1px;
+    height: 15px;
+    margin-left: 6.5px;
+    background: linear-gradient(var(--c), var(--c-next));
+    opacity: 0.45;
+  }
+</style>

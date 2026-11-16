@@ -1,0 +1,35 @@
+---
+import Heading from '@/components/ui/Heading.astro'
+import { visible } from '@/lib/sections'
+import { site } from '@/site.config'
+
+/**
+ * Depoimentos. Vem desligada no config e com a lista vazia: só ligue com depoimentos reais, de
+ * pessoas que autorizaram a publicação.
+ */
+const { testimonials } = site
+---
+
+{
+  visible.depoimentos && (
+    <section id="depoimentos" class="section band-paper" data-section="depoimentos" aria-labelledby="depoimentos-title">
+      <div class="section__shell">
+        <header class="section__header" data-reveal>
+          <Heading id="depoimentos-title" class="t-h2" parts={testimonials} />
+        </header>
+
+        <div class="quote-grid">
+          {testimonials.items.map((item, index) => (
+            <figure class="quote-card grad-border" data-glow-card data-reveal style={`--reveal-index:${index}`}>
+              <blockquote>{item.quote}</blockquote>
+              <figcaption>
+                <strong>{item.name}</strong>
+                <span>{item.role}</span>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}

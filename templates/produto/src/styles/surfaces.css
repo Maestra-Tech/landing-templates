@@ -1,0 +1,521 @@
+/* ============================================================
+   Superfícies — o fundo escuro "cinema", o fundo claro "papel",
+   os cards, os botões e as etiquetas. Nenhuma cor é escrita aqui:
+   tudo vem de `tokens.css`.
+   ============================================================ */
+
+/* ---------- A casca da página: fundo escuro com manchas de cor e uma grade fina ---------- */
+.surface-shell {
+  position: relative;
+  background-color: var(--bg);
+  isolation: isolate;
+  overflow-x: clip;
+}
+
+.surface-shell::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(55% 40% at 8% 0%, color-mix(in oklab, var(--primary-500) 22%, transparent), transparent 70%),
+    radial-gradient(45% 35% at 92% 8%, color-mix(in oklab, var(--secondary-500) 16%, transparent), transparent 72%),
+    radial-gradient(40% 30% at 70% 100%, color-mix(in oklab, var(--accent-500) 10%, transparent), transparent 70%);
+}
+
+.surface-shell::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, var(--line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(80% 70% at 50% 20%, var(--mask-solid) 0%, transparent 100%);
+  opacity: 0.45;
+}
+
+/* Um grão leve por cima de tudo, para o escuro não ficar "chapado". */
+.grain-layer {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.22;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+/* ---------- As duas faixas: cinema (escura) e papel (clara) ---------- */
+.band-cinema,
+.band-paper {
+  position: relative;
+  isolation: isolate;
+}
+
+.band-cinema {
+  --ink: var(--neutral-50);
+  --ink-2: var(--neutral-300);
+  --ink-3: var(--neutral-400);
+  background-color: transparent;
+  color: var(--neutral-50);
+}
+
+.band-paper {
+  --ink: var(--paper-ink);
+  --ink-2: var(--paper-ink2);
+  --ink-3: var(--paper-ink3);
+  --line: var(--paper-line);
+  --line-2: color-mix(in oklab, var(--paper-ink) 14%, transparent);
+  --raised: var(--paper);
+  --raised-2: var(--paper-2);
+  background-color: var(--paper-2);
+  color: var(--paper-ink);
+}
+
+.band-paper::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 45% at 8% 0%, color-mix(in oklab, var(--primary-400) 18%, transparent), transparent 72%),
+    radial-gradient(48% 38% at 94% 12%, color-mix(in oklab, var(--accent-400) 12%, transparent), transparent 74%),
+    radial-gradient(42% 32% at 70% 100%, color-mix(in oklab, var(--secondary-400) 10%, transparent), transparent 70%);
+}
+
+.band-paper::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--primary-500) 11%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--primary-500) 11%, transparent) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(85% 75% at 50% 18%, var(--mask-solid) 0%, transparent 100%);
+  opacity: 0.7;
+}
+
+.band-paper > *,
+.band-cinema > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- Card com borda em degradê ----------
+   A borda é o degradê da marca; por cima dela corre um feixe de luz, e um halo colorido vaza
+   por trás do card. Com mouse, um brilho extra na borda acompanha o cursor (ver `glow.ts`). */
+.grad-border {
+  position: relative;
+  --ink: var(--paper-ink);
+  --ink-2: var(--paper-ink2);
+  --ink-3: var(--paper-ink3);
+  color: var(--paper-ink);
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-panel);
+  max-inline-size: 100%;
+  min-inline-size: 0;
+  overflow-wrap: break-word;
+  background:
+    linear-gradient(var(--paper), var(--paper)) padding-box,
+    var(--grad-4) border-box;
+  box-shadow: var(--shadow-paper);
+}
+
+.grad-border::before {
+  content: '';
+  position: absolute;
+  inset: -10%;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(circle at 50% 40%, color-mix(in oklab, var(--primary-500) 38%, transparent), transparent 68%);
+  filter: blur(28px);
+  opacity: 0.55;
+}
+
+.grad-border::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      240px circle at var(--glow-x, -400px) var(--glow-y, -400px),
+      var(--primary-200),
+      transparent 62%
+    ),
+    conic-gradient(
+      from var(--angle, 0deg),
+      transparent 0%,
+      var(--accent-400) 12%,
+      var(--primary-300) 18%,
+      var(--signal-400) 24%,
+      transparent 36%
+    );
+  /* Propriedades por extenso (e não o atalho `mask`): o atalho zera `mask-composite`, e aí o anel
+     vira um preenchimento por cima do conteúdo. */
+  mask-image:
+    linear-gradient(var(--mask-solid) 0 0),
+    linear-gradient(var(--mask-solid) 0 0);
+  mask-clip: content-box, border-box;
+  mask-origin: content-box, border-box;
+  mask-composite: exclude;
+  -webkit-mask-image:
+    linear-gradient(var(--mask-solid) 0 0),
+    linear-gradient(var(--mask-solid) 0 0);
+  -webkit-mask-clip: content-box, border-box;
+  -webkit-mask-origin: content-box, border-box;
+  -webkit-mask-composite: xor;
+  animation: beam-orbit 6s linear infinite;
+}
+
+.grad-border > * {
+  position: relative;
+  z-index: 1;
+}
+
+.grad-border :is(.t-h2, .t-h3, .t-lead, .t-body) {
+  color: var(--paper-ink);
+}
+
+/* O card em destaque: o mesmo desenho, com o halo mais aceso. */
+.grad-border[data-featured]::before {
+  opacity: 0.95;
+}
+
+/* ---------- Texto pintado pelo degradê ---------- */
+.grad-text {
+  background-image: var(--grad-4);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.band-paper .grad-text,
+.grad-border .grad-text {
+  background-image: var(--grad-text-paper);
+}
+
+/* ---------- Etiquetas (chips) ----------
+   São rótulos, não botões: sem brilho e sem estado de hover. Só a borda em degradê. */
+.paper-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius-pill);
+  border: 1.25px solid transparent;
+  background:
+    linear-gradient(var(--paper-2), var(--paper-2)) padding-box,
+    var(--grad-4) border-box;
+  color: var(--paper-ink);
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: 4px 10px;
+}
+
+/* ---------- Caixa de dado (rótulo + valor) ---------- */
+.paper-proof {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--paper-line);
+  background: var(--paper-3);
+  padding: var(--s-2) var(--s-3);
+}
+
+.paper-proof__label {
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--paper-ink2);
+}
+
+.paper-proof__value {
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--paper-ink);
+}
+
+/* ---------- Caixa de citação ----------
+   Invertida em relação ao papel: fundo de tinta, letra clara, trilho na cor de detalhe. */
+.cite-box {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-inline-size: 0;
+  margin: 0;
+  padding: var(--s-2) var(--s-3);
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--neutral-50);
+  background: var(--neutral-900);
+  border: 1px solid color-mix(in oklab, var(--signal-400) 24%, transparent);
+  border-inline-start: 3px solid var(--signal-500);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-ink);
+}
+
+.cite-box__label {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-family: var(--font-mono);
+  font-size: var(--t-kicker);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--signal-300);
+}
+
+.cite-box__label::before {
+  content: '';
+  flex: 0 0 auto;
+  inline-size: 7px;
+  block-size: 7px;
+  border-radius: 2px;
+  background: currentcolor;
+}
+
+.cite-box__text {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--neutral-50);
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Rótulo de categoria (kicker): caixa alta com um tracinho em degradê ---------- */
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--t-kicker);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.kicker::before {
+  content: '';
+  flex: 0 0 auto;
+  inline-size: 22px;
+  block-size: 2px;
+  border-radius: var(--radius-pill);
+  background: var(--grad-4);
+}
+
+/* ---------- Divisor em degradê ---------- */
+.grad-rule {
+  inline-size: 100%;
+  height: 2px;
+  margin: 0;
+  border: 0;
+  background: var(--grad-4);
+  border-radius: var(--radius-pill);
+  opacity: 0.4;
+}
+
+/* ---------- O pontinho luminoso da faixa de aviso ---------- */
+.signal-dot {
+  display: inline-block;
+  flex: none;
+  inline-size: 6px;
+  block-size: 6px;
+  border-radius: var(--radius-pill);
+  background: var(--signal-600);
+  box-shadow: var(--glow-signal);
+}
+
+/* ---------- O selo de "confere" ----------
+   Um desenho genérico em SVG (ver `ui/Seal.astro`), pintado com o degradê da marca. */
+.seal {
+  display: inline-block;
+  flex: none;
+  inline-size: 1.15em;
+  block-size: 1.15em;
+  vertical-align: -0.2em;
+}
+
+/* ---------- Selos de texto (badges) ---------- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius-pill);
+  padding: 3px var(--s-3);
+  font-size: var(--t-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--on-grad);
+  background-image: var(--grad);
+}
+
+.badge--neutral {
+  padding-inline: var(--s-2);
+  border: 1px solid var(--paper-line);
+  background: var(--paper-3);
+  color: var(--paper-ink);
+}
+
+/* ---------- Botões ----------
+   Quatro peles (primary, glass, paper, ghost) e quatro tamanhos (sm, md, lg, pill). */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  max-inline-size: 100%;
+  min-block-size: 48px;
+  padding: 10px var(--s-5);
+  border: 0;
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: var(--t-lg);
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: center;
+  text-decoration: none;
+  white-space: normal;
+  user-select: none;
+  cursor: pointer;
+  transition:
+    transform 200ms var(--ease-out),
+    box-shadow 200ms var(--ease-out),
+    background-color 200ms var(--ease-out),
+    color 200ms var(--ease-out);
+}
+
+.btn:active {
+  translate: 0 1px;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.btn--sm {
+  min-block-size: 36px;
+  padding: 6px var(--s-3);
+  font-size: var(--t-sm);
+  border-radius: var(--radius-sm);
+}
+
+.btn--md {
+  min-block-size: 44px;
+  padding-block: 8px;
+  font-size: var(--t-body);
+}
+
+.btn--pill {
+  min-block-size: 44px;
+  padding-block: 8px;
+  font-size: var(--t-body);
+  border-radius: var(--radius-pill);
+}
+
+.btn--block {
+  inline-size: 100%;
+}
+
+/* A ação principal: degradê da marca e sombra luminosa. */
+.btn--primary {
+  background-image: var(--grad);
+  color: var(--on-grad);
+  box-shadow: var(--shadow-cta);
+}
+
+/* Ação secundária sobre o fundo escuro. */
+.btn--glass {
+  background: var(--raised);
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+
+/* Ação sobre papel. */
+.btn--paper {
+  background: var(--paper);
+  color: var(--paper-ink);
+  border: 1px solid var(--paper-line);
+  box-shadow: var(--shadow-paper);
+}
+
+/* Navegação discreta: sem caixa até passar o mouse. */
+.btn--ghost {
+  background: transparent;
+  color: var(--ink-2);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn--primary:hover {
+    filter: brightness(1.1);
+  }
+
+  .btn--glass:hover {
+    border-color: var(--line-2);
+    background: var(--raised-2);
+  }
+
+  .btn--paper:hover {
+    background: var(--paper-2);
+  }
+
+  .btn--ghost:hover {
+    color: var(--ink);
+    background: color-mix(in oklab, var(--ink) 6%, transparent);
+  }
+}
+
+/* ---------- Faixa escura sobre papel ----------
+   Usada para fechar o comparativo (frase + selo + botão), para o aviso da vitrine e para o
+   destaque da seção de preços. Tinta escura, borda em degradê. */
+.dark-band {
+  --ink: var(--neutral-50);
+  --ink-2: var(--neutral-200);
+  --ink-3: var(--neutral-300);
+  position: relative;
+  z-index: 1;
+  inline-size: 100%;
+  margin: 0;
+  padding: var(--s-5);
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(var(--paper-ink), var(--paper-ink)) padding-box,
+    var(--grad-4) border-box;
+  color: var(--paper);
+  box-shadow: var(--shadow-cta);
+}
+
+.dark-band :where(p) {
+  color: var(--neutral-200);
+}
+
+.dark-band .t-h3 {
+  color: var(--neutral-50);
+}
+
+@media (min-width: 640px) {
+  .dark-band--roomy {
+    padding: var(--s-6);
+  }
+}

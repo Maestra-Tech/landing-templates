@@ -1,0 +1,189 @@
+---
+// MOCK · organograma: um item principal e os itens ligados a ele.
+interface Props {
+  label: string;
+  meta?: string;
+  root: { label: string; status?: string };
+  nodes: { label: string; status?: string; state?: 'active' | 'queued' | 'watching' }[];
+  [key: string]: unknown;
+}
+
+const { label, meta, root, nodes } = Astro.props;
+---
+
+<div class="tree">
+  <div class="tree__head">
+    <span class="tree__label">{label}</span>
+    {meta && <span class="tree__meta">{meta}</span>}
+  </div>
+  <div class="tree__root">
+    <span class="tree__root-name"><span class="tree__diamond" aria-hidden="true"></span>{root.label}</span>
+    {root.status && <span class="tree__root-status">{root.status}</span>}
+  </div>
+  <ul class="tree__nodes">
+    {
+      nodes.map((node) => (
+        <li class="tree__branch">
+          <span class="tree__twig" aria-hidden="true" />
+          <span class:list={['tree__node', `is-${node.state ?? 'active'}`]}>
+            <span class="tree__name"><span class="tree__dot" aria-hidden="true" />{node.label}</span>
+            {node.status && <span class="tree__status">{node.status}</span>}
+          </span>
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<style>
+  .tree {
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: linear-gradient(180deg, var(--surface), var(--bg-raised));
+    box-shadow: var(--shadow-mock);
+    font-family: var(--font-mono);
+    text-align: left;
+  }
+
+  .tree__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding-bottom: 12px;
+  }
+
+  .tree__label {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--ink) 72%, transparent);
+  }
+
+  .tree__meta {
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+
+  .tree__root {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 9px 12px;
+    border: 1px solid color-mix(in srgb, var(--accent-1) 40%, transparent);
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--accent-1) 9%, transparent);
+    box-shadow: 0 0 24px color-mix(in srgb, var(--accent-1) 12%, transparent);
+  }
+
+  .tree__root-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 14px;
+    color: var(--ink);
+  }
+
+  .tree__diamond {
+    width: 9px;
+    height: 9px;
+    transform: rotate(45deg);
+    background: var(--accent-1);
+    box-shadow: 0 0 10px var(--accent-1);
+  }
+
+  .tree__root-status {
+    font-size: 12px;
+    color: var(--accent-1);
+  }
+
+  .tree__nodes {
+    display: flex;
+    flex-direction: column;
+    margin: 0 0 0 16px;
+    padding: 0;
+    border-left: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+    list-style: none;
+  }
+
+  .tree__branch {
+    display: flex;
+    align-items: center;
+    padding-top: 8px;
+  }
+
+  .tree__branch:first-child {
+    padding-top: 10px;
+  }
+
+  .tree__twig {
+    flex: none;
+    width: 15px;
+    height: 1px;
+    background: color-mix(in srgb, var(--ink) 16%, transparent);
+  }
+
+  .tree__node {
+    --dot: var(--accent-1);
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 7px 11px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--ink) 3%, transparent);
+  }
+
+  .tree__name {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    font-size: 13.5px;
+    color: color-mix(in srgb, var(--ink) 90%, transparent);
+  }
+
+  .tree__dot {
+    flex: none;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--dot);
+    box-shadow: 0 0 6px color-mix(in srgb, var(--dot) 70%, transparent);
+  }
+
+  .tree__status {
+    font-size: 11.5px;
+    color: color-mix(in srgb, var(--ink) 58%, transparent);
+    white-space: nowrap;
+  }
+
+  /* Na fila: ponto rosa, sem brilho, texto mais apagado. */
+  .is-queued {
+    --dot: var(--accent-4);
+  }
+
+  .is-queued .tree__dot {
+    box-shadow: none;
+  }
+
+  .is-queued .tree__name {
+    color: color-mix(in srgb, var(--ink) 70%, transparent);
+  }
+
+  /* Observando: caixa azulada. */
+  .is-watching {
+    --dot: var(--accent-2);
+    border-color: color-mix(in srgb, var(--accent-2) 22%, transparent);
+    background: color-mix(in srgb, var(--accent-2) 5%, transparent);
+  }
+
+  .is-watching .tree__status {
+    color: var(--accent-2);
+  }
+</style>

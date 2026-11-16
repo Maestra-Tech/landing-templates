@@ -1,0 +1,62 @@
+---
+import Brand from '@/components/ui/Brand.astro'
+import Icon from '@/components/ui/Icon.astro'
+import { site } from '@/site.config'
+
+/**
+ * O rodapé: marca e frase, botões das redes, links e nota.
+ *
+ * Os ícones das redes são desenhos genéricos (câmera, conversa, vídeo...). O nome lido por
+ * leitores de tela vem do `label` de cada rede no config.
+ */
+const { footer } = site
+const company = footer.company.enabled ? footer.company.lines.filter(Boolean) : []
+---
+
+<footer class="site-footer band-cinema" data-section="rodape">
+  <div class="site-footer__inner">
+    <div class="site-footer__brand">
+      <Brand onDark />
+      {footer.tagline && <p class="site-footer__tagline">{footer.tagline}</p>}
+      {
+        company.length > 0 && (
+          <address class="site-footer__company">
+            {company.map((line, index) => (
+              <>
+                {index > 0 && <br />}
+                {line}
+              </>
+            ))}
+          </address>
+        )
+      }
+    </div>
+
+    {
+      footer.social.length > 0 && (
+        <nav class="site-footer__icons" aria-label="Contato e redes">
+          {footer.social.map((item) => (
+            <a href={item.href} rel="noopener" class="site-footer__icon" aria-label={item.label}>
+              <Icon name={item.icon} />
+            </a>
+          ))}
+        </nav>
+      )
+    }
+  </div>
+
+  {
+    (footer.links.length > 0 || footer.note) && (
+      <div class="site-footer__bar">
+        {footer.links.length > 0 && (
+          <nav class="site-footer__legal" aria-label="Links do rodapé">
+            {footer.links.map((link) => (
+              <a href={link.href}>{link.label}</a>
+            ))}
+          </nav>
+        )}
+        {footer.note && <p class="site-footer__note">{footer.note}</p>}
+      </div>
+    )
+  }
+</footer>

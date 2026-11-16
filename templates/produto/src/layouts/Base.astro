@@ -1,0 +1,94 @@
+---
+import '@/styles/global.css'
+
+import { effectsOff } from '@/lib/effects'
+import { visible } from '@/lib/sections'
+import { site } from '@/site.config'
+
+/**
+ * O documento base: tudo o que fica no `<head>` e a casca do `<body>`.
+ *
+ * - Título, descrição e imagem de compartilhamento vêm do bloco `seo` do config.
+ * - O endereço canônico é montado a partir de `site.url`, e é o mesmo valor em `canonical`,
+ *   `og:url` e nos dados estruturados: não existem duas cópias para divergir.
+ * - Os dados estruturados (JSON-LD) são opcionais (`seo.jsonLd`) e mínimos: o site, a
+ *   organização e, se a seção de dúvidas estiver visível, as perguntas e respostas.
+ * - `data-fx-off` lista os efeitos desligados no config; o CSS e os scripts leem esse atributo.
+ */
+const { seo, brand } = site
+const canonical = new URL(Astro.url.pathname, site.url).href
+const socialImage = seo.image ? new URL(seo.image, site.url).href : undefined
+const locale = site.lang.replace('-', '_')
+
+const graph: Record<string, unknown>[] = [
+  { '@type': 'WebSite', '@id': `${site.url}/#site`, url: canonical, name: brand.name, inLanguage: site.lang },
+  { '@type': 'Organization', '@id': `${site.url}/#org`, name: brand.name, url: site.url },
+]
+if (visible.faq) {
+  graph.push({
+    '@type': 'FAQPage',
+    '@id': `${canonical}#faq`,
+    mainEntity: site.faq.items.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: { '@type': 'Answer', text: item.answer },
+    })),
+  })
+}
+// `<` é escapado para que nenhum texto do config consiga fechar a tag de script.
+const jsonLd = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }).replace(/</g, '\\u003c')
+
+// Sem a faixa de aviso, a altura reservada para ela é zero.
+const hasAnnouncement = site.nav.announcement.enabled && site.nav.announcement.text.trim().length > 0
+---
+
+<!doctype html>
+<html
+  lang={site.lang}
+  data-fx-off={effectsOff || undefined}
+  style={hasAnnouncement ? undefined : '--offer-h:0px'}
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{seo.title}</title>
+    <meta name="description" content={seo.description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content={brand.themeColor} />
+    <link rel="icon" type="image/svg+xml" sizes="any" href="/favicon.svg" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={brand.name} />
+    <meta property="og:locale" content={locale} />
+    <meta property="og:title" content={seo.title} />
+    <meta property="og:description" content={seo.description} />
+    <meta property="og:url" content={canonical} />
+    {socialImage && <meta property="og:image" content={socialImage} />}
+    {socialImage && <meta property="og:image:alt" content={seo.imageAlt} />}
+    <meta name="twitter:card" content={socialImage ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={seo.title} />
+    <meta name="twitter:description" content={seo.description} />
+    {socialImage && <meta name="twitter:image" content={socialImage} />}
+
+    {seo.jsonLd && <script type="application/ld+json" is:inline set:html={jsonLd} />}
+  </head>
+  <body>
+    {/* O degradê do selo e do símbolo da marca, definido uma vez e reusado por todos os SVGs. */}
+    <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+      <defs>
+        <linearGradient id="seal-grad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" style="stop-color: var(--accent-500)"></stop>
+          <stop offset="0.5" style="stop-color: var(--primary-500)"></stop>
+          <stop offset="1" style="stop-color: var(--secondary-500)"></stop>
+        </linearGradient>
+      </defs>
+    </svg>
+
+    <slot />
+
+    {/* A única entrada de interatividade. Sem ela, a página continua inteira e legível. */}
+    <script>
+      import '@/scripts/main'
+    </script>
+  </body>
+</html>

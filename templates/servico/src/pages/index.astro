@@ -1,0 +1,33 @@
+---
+// PÁGINA INICIAL — a ordem das seções é a ordem das linhas abaixo.
+// Para mudar a ordem, troque as linhas de lugar. Para esconder uma seção,
+// use "enabled: false" no site.config.ts (não precisa apagar daqui).
+import Base from '../layouts/Base.astro';
+import Navbar from '../components/sections/Navbar.astro';
+import Hero from '../components/sections/Hero.astro';
+import Stats from '../components/sections/Stats.astro';
+import Compare from '../components/sections/Compare.astro';
+import Offers from '../components/sections/Offers.astro';
+import Process from '../components/sections/Process.astro';
+import CaseStudy from '../components/sections/CaseStudy.astro';
+import Testimonials from '../components/sections/Testimonials.astro';
+import Faq from '../components/sections/Faq.astro';
+import CtaFinal from '../components/sections/CtaFinal.astro';
+import Footer from '../components/sections/Footer.astro';
+---
+
+<Base>
+  <Navbar />
+  <main id="conteudo">
+    <Hero />
+    <Stats />
+    <Compare />
+    <Offers />
+    <Process />
+    <CaseStudy />
+    <Testimonials />
+    <Faq />
+    <CtaFinal />
+  </main>
+  <Footer />
+</Base>

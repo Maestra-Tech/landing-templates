@@ -1,0 +1,123 @@
+---
+// SERVIÇOS / NÍVEIS — os degraus de oferta: três cards empilhados com texto
+// à esquerda e uma ilustração (mock) ou imagem à direita.
+import { site } from '../../site.config';
+import SectionHead from '../ui/SectionHead.astro';
+import HoloPill from '../ui/HoloPill.astro';
+import Mock from '../mocks/Mock.astro';
+import { rich } from '../../lib/rich';
+
+const offers = site.offers;
+const show = offers.enabled && offers.items.length > 0;
+---
+
+{
+  show && (
+    <section class="section offers" id="servicos">
+      <SectionHead eyebrow={offers.eyebrow} title={offers.title} titleAccent={offers.titleAccent} titleAfter={offers.titleAfter} text={offers.text} />
+
+      <div class="stack" data-stack-group>
+        {offers.items.map((item, index) => (
+          <article class="stack-card offers__card" data-stack style={`--i: ${index}; z-index: ${index + 1}`}>
+            <div class="stack-halo" aria-hidden="true" />
+            <div class="stack-surface offers__surface">
+              <div class="grain-layer" aria-hidden="true" />
+              <div class="offers__copy">
+                <span class="offers__step">{item.step}</span>
+                <h3 class="offers__title">{item.title}</h3>
+                <p class="offers__text">{item.text}</p>
+              </div>
+              <div class="offers__visual">
+                <Mock mock={item.mock} />
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      {(offers.closing || offers.ctaLabel) && (
+        <div class="closing" data-reveal>
+          {offers.closing && <p class="closing__text rich" data-wordreveal set:html={rich(offers.closing)} />}
+          {offers.ctaLabel && (
+            <div class="closing__actions">
+              <HoloPill label={offers.ctaLabel} />
+              {offers.ctaNote && <p class="fine-print">{offers.ctaNote}</p>}
+            </div>
+          )}
+        </div>
+      )}
+    </section>
+  )
+}
+
+<style>
+  /* Cores do halo e do rótulo por posição. */
+  .offers__card:nth-child(3n + 1) {
+    --halo: var(--halo-1);
+    --halo-opacity: 0.45;
+    --step-color: var(--accent-2);
+  }
+
+  .offers__card:nth-child(3n + 2) {
+    --halo: var(--halo-2);
+    --halo-opacity: 0.45;
+    --step-color: var(--accent-3);
+  }
+
+  .offers__card:nth-child(3n) {
+    --halo: var(--halo-3);
+    --halo-opacity: 0.55;
+    --step-color: var(--accent-1);
+  }
+
+  .offers__surface {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(24px, 3vw, 48px);
+    padding: clamp(24px, 3vw, 44px);
+  }
+
+  .offers__copy {
+    flex: 1 1 380px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 14px;
+  }
+
+  .offers__step {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--step-color);
+  }
+
+  .offers__title {
+    font-size: clamp(25px, 2.4vw, 34px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+
+  .offers__text {
+    max-width: 520px;
+    font-size: clamp(16px, 1.3vw, 18.5px);
+    line-height: 1.65;
+    color: var(--ink-soft);
+  }
+
+  .offers__visual {
+    flex: 1 1 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media (max-width: 767px) {
+    .offers__copy,
+    .offers__visual {
+      flex-basis: 100%;
+    }
+  }
+</style>

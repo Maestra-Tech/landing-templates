@@ -1,0 +1,21 @@
+---
+/**
+ * Um item que abre e fecha, feito com `<details>` nativo: funciona com teclado, leitor de tela e
+ * busca na página, sem JavaScript, e a resposta já está no HTML entregue.
+ */
+interface Props {
+  question: string
+}
+
+const { question } = Astro.props
+---
+
+<details class="disclosure">
+  <summary>
+    <span>{question}</span>
+    <span class="disclosure__marker" aria-hidden="true"></span>
+  </summary>
+  <div class="disclosure__answer">
+    <slot />
+  </div>
+</details>

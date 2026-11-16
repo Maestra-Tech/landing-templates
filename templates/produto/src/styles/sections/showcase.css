@@ -1,0 +1,173 @@
+/* ============================================================
+   VITRINE — uma sequência de "folhas" (telas, documentos, modelos).
+
+   Cada folha tem o título em brilho acima dela e uma moldura com borda em degradê. No celular,
+   cada folha pode usar uma imagem própria, mais estreita e legível (campo `imageMobile`).
+   Depois da sequência vêm uma faixa escura de reforço e uma frase grande de fecho.
+   ============================================================ */
+.showcase-shell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-6);
+  margin-inline: auto;
+  padding-inline: var(--s-4);
+  max-inline-size: var(--shell-read);
+}
+
+.showcase-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-4);
+  max-inline-size: 68ch;
+  text-align: center;
+}
+
+.showcase-sub {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-3);
+  max-inline-size: 62ch;
+  text-align: center;
+}
+
+.doc-stack__title {
+  font-size: clamp(1.75rem, 5.2vw, 2.75rem);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.doc-stack__note {
+  margin: 0;
+  max-inline-size: 60ch;
+  font-weight: 400;
+  font-size: clamp(0.9375rem, 2.6vw, 1.0625rem);
+  line-height: 1.6;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+.doc-stack__note-emphasis {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.doc-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  inline-size: 100%;
+  gap: var(--doc-gap, var(--s-7));
+}
+
+.doc-stack__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  inline-size: 100%;
+  gap: var(--s-3);
+}
+
+.doc-stack__doc-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.125rem, 3vw, 1.5rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+
+.doc-card {
+  position: relative;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  margin: 0;
+  padding: var(--s-3);
+}
+
+.doc-card img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  object-fit: contain;
+  border-radius: calc(var(--radius-panel) - 6px);
+}
+
+@media (max-width: 767px) {
+  .doc-card {
+    inline-size: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  .doc-stack {
+    --doc-gap: var(--s-8);
+  }
+
+  /* O teto de largura evita que a folha vire um pôster; a altura fica livre. */
+  .doc-card {
+    inline-size: min(calc(44rem + 2 * var(--s-3)), 100%);
+  }
+}
+
+/* ---------- A faixa de reforço ---------- */
+.doc-stack__reinforcement {
+  max-inline-size: 62ch;
+  margin-block-start: var(--s-2);
+  text-align: center;
+}
+
+.doc-stack__reinforcement-title {
+  margin: 0 0 var(--s-1);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.125rem, 2.8vw, 1.375rem);
+  line-height: 1.25;
+  color: var(--paper);
+}
+
+.dark-band .doc-stack__reinforcement-title {
+  color: var(--paper);
+}
+
+.dark-band .doc-stack__reinforcement-body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: clamp(0.9375rem, 2.4vw, 1.0625rem);
+  line-height: 1.55;
+  color: color-mix(in oklab, var(--paper) 82%, transparent);
+}
+
+/* ---------- A frase de fecho: grande, em brilho, com um ícone ---------- */
+.doc-stack__closing {
+  position: relative;
+  z-index: 1;
+  margin: var(--s-6) 0 0;
+  text-align: center;
+  text-wrap: balance;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 4.6vw, 2.5rem);
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+}
+
+@media (min-width: 768px) {
+  .doc-stack__closing {
+    margin-block-start: var(--s-7);
+  }
+}
+
+.doc-stack__closing-icon {
+  display: inline-block;
+  inline-size: 1.05em;
+  block-size: 1.05em;
+  margin-inline-end: 0.32em;
+  vertical-align: -0.16em;
+  color: var(--brand-on-paper);
+}

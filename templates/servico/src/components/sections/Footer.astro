@@ -1,0 +1,92 @@
+---
+// RODAPÉ — nome/logo, link de contato, links extras e a linha de direitos.
+// Com "exemplo: true" no config, mostra o aviso de conteúdo de demonstração.
+import { site } from '../../site.config';
+import { contactHref, isExternal } from '../../lib/contact';
+
+const href = contactHref();
+const external = isExternal(href);
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="footer__row">
+    <div class="footer__brand">
+      {site.logo.src ? <img src={site.logo.src} alt={site.logo.alt} /> : <span>{site.name}</span>}
+    </div>
+    <div class="footer__side">
+      {site.footer.links.map((link) => (
+        <a class="footer__link" href={link.href} target={isExternal(link.href) ? '_blank' : undefined} rel={isExternal(link.href) ? 'noopener' : undefined}>{link.label}</a>
+      ))}
+      <a class="footer__link" href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener' : undefined}>{site.nav.ctaLabel} →</a>
+      <span class="footer__copy">© {year} {site.footer.text}</span>
+    </div>
+  </div>
+  {site.exemplo && <p class="footer__demo">Conteúdo de exemplo. Edite os textos em src/site.config.ts e mude "exemplo" para false.</p>}
+</footer>
+
+<style>
+  .footer {
+    max-width: var(--container);
+    margin-inline: auto;
+    padding: clamp(20px, 4vh, 42px) var(--gutter);
+    border-top: 1px solid var(--line);
+  }
+
+  .footer__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .footer__brand {
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-size: clamp(18px, 2.4vw, 22px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .footer__brand img {
+    width: auto;
+    height: clamp(22px, 5vw, 30px);
+  }
+
+  .footer__side {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 24px;
+  }
+
+  .footer__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    border-bottom: 1px solid transparent;
+    color: var(--ink-soft);
+    font-size: 16px;
+    text-decoration: none;
+    transition: color 120ms var(--ease-out);
+  }
+
+  .footer__link:hover {
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .footer__copy {
+    font-size: 15px;
+    color: var(--neutral-300);
+  }
+
+  .footer__demo {
+    margin-top: 16px;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--neutral-300);
+  }
+</style>

@@ -1,0 +1,158 @@
+---
+import Cta from '@/components/ui/Cta.astro'
+import Heading from '@/components/ui/Heading.astro'
+import Seal from '@/components/ui/Seal.astro'
+import { visible } from '@/lib/sections'
+import { site } from '@/site.config'
+
+/**
+ * Os preços.
+ *
+ * 1. Os cards de plano: selo, nome, preço riscado (opcional), preço em destaque, condição, termos,
+ *    botão, lista do que vem incluído e letra miúda.
+ * 2. As opções (opcional): uma faixa escura de explicação e cards menores para comparar formas
+ *    de pagamento.
+ *
+ * Tudo é texto vindo do config: não há conta nenhuma aqui. Se o preço mudar, mude o texto.
+ * O par de preços é lido em voz alta como uma frase só (classe `sr-only`), para o leitor de tela
+ * não anunciar dois números soltos.
+ */
+const { pricing } = site
+const { options } = pricing
+const showOptions = options.enabled && options.items.length > 0
+const planCols = Math.min(pricing.plans.length, 3)
+---
+
+{
+  visible.precos && (
+    <section id="precos" class="section band-paper" data-section="precos" aria-labelledby="precos-title">
+      <div class="pricing-shell">
+        <header class="pricing-head" data-reveal>
+          {pricing.kicker && <p class="list-label grad-text">{pricing.kicker}</p>}
+          <Heading id="precos-title" class="t-h2" parts={pricing} />
+          {pricing.lead && <p class="t-lead">{pricing.lead}</p>}
+        </header>
+
+        <div class="plan-grid" style={`--plan-cols:${planCols}`}>
+          {pricing.plans.map((plan) => (
+            <article class="grad-border plan-card" data-featured={plan.featured ? '' : undefined}>
+              <div class="plan-card__body">
+                {plan.badge && (
+                  <p class="plan-card__badges">
+                    <span class="badge">{plan.badge}</span>
+                    {plan.badgeDetail && <span class="plan-card__badge-detail">{plan.badgeDetail}</span>}
+                  </p>
+                )}
+
+                <h3 class="card-label">{plan.name}</h3>
+                {plan.headline && <p class="t-h3">{plan.headline}</p>}
+                {plan.description && <p class="card-note">{plan.description}</p>}
+
+                <div class="price-pair" aria-hidden="true">
+                  {plan.listPrice && <s class="price-pair__list">{plan.listPrice}</s>}
+                  <p class="price-pair__row">
+                    <span class="price-pair__value">{plan.price}</span>
+                    <span class="price-pair__unit">{plan.unit}</span>
+                  </p>
+                </div>
+                <p class="sr-only">
+                  {plan.listPrice
+                    ? `De ${plan.listPrice} por ${plan.price} ${plan.unit}.`
+                    : `${plan.price} ${plan.unit}.`}
+                </p>
+
+                {plan.condition && <p class="card-note">{plan.condition}</p>}
+
+                <hr class="grad-rule" />
+
+                {plan.terms && <p class="card-strong">{plan.terms}</p>}
+
+                {plan.primary ? (
+                  <Cta label={plan.cta.label} href={plan.cta.href} class="btn--block" />
+                ) : (
+                  <a href={plan.cta.href} class="btn btn--paper btn--md btn--block">
+                    {plan.cta.label}
+                  </a>
+                )}
+
+                {plan.includes.length > 0 && (
+                  <div class="plan-card__includes">
+                    <p class="list-label">{plan.includesTitle}</p>
+                    <ul class="plan-card__list" role="list">
+                      {plan.includes.map((item) => (
+                        <li>
+                          <Seal />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {plan.finePrint && <p class="card-fine">{plan.finePrint}</p>}
+              </div>
+            </article>
+          ))}
+        </div>
+
+        {showOptions && (
+          <div class="option-block">
+            <header class="option-block__head" data-reveal>
+              <h3 class="t-h3">{options.title}</h3>
+              {options.lead && <p class="card-note">{options.lead}</p>}
+            </header>
+
+            {options.band.enabled && (
+              <aside class="dark-band dark-band--roomy">
+                <div class="option-band__body">
+                  <p class="t-h3">{options.band.title}</p>
+                  {options.band.paragraphs.map((paragraph) => (
+                    <p>{paragraph}</p>
+                  ))}
+                </div>
+              </aside>
+            )}
+
+            <div class="option-grid">
+              {options.items.map((option) => (
+                <article class="grad-border plan-card" data-featured={option.featured ? '' : undefined}>
+                  <div class="plan-card__body">
+                    <p class="option-card__badges">
+                      {option.badge && <span class="badge">{option.badge}</span>}
+                      {option.tag && <span class="badge badge--neutral">{option.tag}</span>}
+                    </p>
+
+                    <h4 class="card-label">{option.label}</h4>
+
+                    <div class="price-pair price-pair--sm">
+                      <p class="price-pair__row">
+                        <span class="price-pair__value">{option.price}</span>
+                        <span class="price-pair__unit">{option.unit}</span>
+                      </p>
+                    </div>
+
+                    <div class="option-card__facts">
+                      <p class="card-strong">{option.strong}</p>
+                      {option.note && <p class="card-note">{option.note}</p>}
+                    </div>
+
+                    <div class="option-card__action">
+                      <a href={option.cta.href} class="btn btn--paper btn--md btn--block">
+                        {option.cta.label}
+                      </a>
+                      {option.ctaNote && <p class="card-fine">{option.ctaNote}</p>}
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+
+            {options.footer && <p class="card-note pricing-footer">{options.footer}</p>}
+          </div>
+        )}
+
+        {pricing.note && <p class="card-note pricing-footer">{pricing.note}</p>}
+      </div>
+    </section>
+  )
+}

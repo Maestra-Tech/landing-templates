@@ -1,0 +1,142 @@
+---
+// MOCK · conversa em linhas (estilo página de atendimento).
+import type { Tone } from '../../site.config';
+
+interface Props {
+  name: string;
+  tag?: string;
+  rows: { avatar: string; text: string; highlight?: boolean }[];
+  footer?: string;
+  footerTone?: Tone;
+  [key: string]: unknown;
+}
+
+const { name, tag, rows, footer, footerTone = 'neutral' } = Astro.props;
+---
+
+<div class="thread">
+  <div class="thread__head">
+    <span class="thread__name">{name}</span>
+    {tag && <span class="thread__tag">{tag}</span>}
+  </div>
+  {
+    rows.map((row) => (
+      <div class:list={['thread__row', { 'thread__row--hl': row.highlight }]}>
+        <span class="thread__avatar" aria-hidden="true">{row.avatar}</span>
+        <span class="thread__text">{row.text}</span>
+      </div>
+    ))
+  }
+  {
+    footer && (
+      <div class="thread__foot">
+        <span class:list={['thread__status', `tone-${footerTone}`]}><span class="thread__dot"></span>{footer}</span>
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .thread {
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--bg-raised);
+    box-shadow: var(--shadow-inner);
+    text-align: left;
+  }
+
+  .thread__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 12px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .thread__name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--neutral-100);
+  }
+
+  .thread__tag {
+    padding: 2px 7px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xs);
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--ink-faint);
+  }
+
+  .thread__row {
+    display: flex;
+    gap: 10px;
+    padding: 12px;
+    border-bottom: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+  }
+
+  .thread__row--hl {
+    background: color-mix(in srgb, var(--ink) 2%, transparent);
+  }
+
+  .thread__avatar {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: var(--radius-xs);
+    background: var(--neutral-400);
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .thread__row--hl .thread__avatar {
+    background: color-mix(in srgb, var(--accent-1) 68%, var(--bg));
+    color: var(--on-accent);
+  }
+
+  .thread__text {
+    font-size: 14.5px;
+    line-height: 1.5;
+    color: var(--neutral-100);
+  }
+
+  .thread__foot {
+    padding: 9px 12px;
+  }
+
+  .thread__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+  }
+
+  .thread__dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .tone-good {
+    color: var(--tone-good);
+  }
+
+  .tone-bad {
+    color: var(--tone-bad);
+  }
+
+  .tone-info {
+    color: var(--tone-info);
+  }
+</style>

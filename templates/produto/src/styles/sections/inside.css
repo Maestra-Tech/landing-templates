@@ -1,0 +1,520 @@
+/* ============================================================
+   POR DENTRO — a seção de leitura mais longa da página.
+
+   Abertura (título + caixa de destaque), o índice lateral com os cards de cada ponto, um card de
+   fecho com a borda animada e uma amostra. No computador o índice fica fixo ao lado e marca o
+   ponto que está sendo lido.
+   ============================================================ */
+.inside-shell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-7);
+  margin-inline: auto;
+  padding-inline: var(--s-4);
+  max-inline-size: var(--shell-read);
+}
+
+.ev-open {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-6);
+  align-items: start;
+  inline-size: 100%;
+}
+
+.ev-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  inline-size: 100%;
+  max-inline-size: 68ch;
+}
+
+@media (min-width: 1024px) {
+  .ev-open {
+    grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+    gap: var(--s-7);
+  }
+}
+
+/* ---------- Caixa de destaque: frase, fonte e comentário ---------- */
+.ev-proof {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  inline-size: 100%;
+  max-inline-size: 74ch;
+  margin: 0;
+  padding: var(--s-4);
+  border: 1px solid var(--paper-line);
+  border-inline-start: 3px solid var(--secondary-500);
+  border-radius: var(--radius-lg);
+  background: var(--paper);
+  box-shadow: var(--shadow-card);
+}
+
+.ev-proof__quote {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--t-lg);
+  font-style: italic;
+  line-height: 1.55;
+  color: var(--paper-ink);
+}
+
+.ev-proof__gloss {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--t-body);
+  line-height: 1.6;
+  color: var(--paper-ink2);
+}
+
+.ev-proof > .cite-box {
+  align-self: flex-start;
+  max-inline-size: 46ch;
+}
+
+@media (min-width: 768px) {
+  .ev-proof {
+    padding: var(--s-5);
+  }
+}
+
+/* ---------- Índice + cards ---------- */
+.mech-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-5);
+  inline-size: 100%;
+}
+
+.mech-rail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  min-inline-size: 0;
+}
+
+.mech-rail__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mech-rail__link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--s-2);
+  padding: 5px 12px;
+  border: 1px solid var(--paper-line);
+  border-radius: var(--radius-pill);
+  background: var(--paper);
+  color: var(--paper-ink);
+  text-decoration: none;
+  transition:
+    border-color var(--dur-state) var(--ease-out),
+    color var(--dur-state) var(--ease-out);
+}
+
+.mech-rail__link:hover {
+  border-color: color-mix(in oklab, var(--primary-500) 55%, transparent);
+  color: var(--primary-700);
+}
+
+.mech-rail__link:focus-visible {
+  outline: 2px solid var(--primary-500);
+  outline-offset: 3px;
+}
+
+/* O ponto que está sendo lido: `aria-current` é escrito por `scripts/inside-rail.ts`. */
+.mech-rail__link[aria-current] {
+  border-color: color-mix(in oklab, var(--primary-500) 55%, transparent);
+  color: var(--primary-700);
+}
+
+.mech-rail__index {
+  font-family: var(--font-mono);
+  font-size: var(--t-kicker);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+  color: var(--paper-ink2);
+}
+
+.mech-rail__term {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.mech-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  min-inline-size: 0;
+}
+
+/* ---------- O card de um ponto ---------- */
+.mech {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  padding: var(--s-5) var(--s-4);
+  border: 1px solid var(--paper-line);
+  border-radius: var(--radius-lg);
+  background: var(--paper);
+  box-shadow: var(--shadow-paper);
+  scroll-margin-top: calc(var(--offer-h) + var(--nav-h) + var(--s-5));
+  overflow: hidden;
+}
+
+/* O filete em degradê no topo do card. */
+.mech::before {
+  content: '';
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  block-size: 2px;
+  background: var(--grad-4);
+  opacity: 0.75;
+}
+
+.mech > * {
+  position: relative;
+  z-index: 1;
+}
+
+.mech__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin: 0;
+}
+
+.mech__index {
+  font-family: var(--font-mono);
+  font-size: var(--t-kicker);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+}
+
+.mech__term {
+  font-family: var(--font-mono);
+  font-size: var(--t-kicker);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.mech__dot {
+  flex: 0 0 auto;
+  inline-size: 7px;
+  block-size: 7px;
+  border-radius: 2px;
+  background: var(--secondary-500);
+}
+
+.mech .mech__headline {
+  margin: 0;
+  color: var(--paper-ink);
+  text-wrap: pretty;
+}
+
+.mech__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  margin-block-start: var(--s-1);
+  max-inline-size: 68ch;
+}
+
+.mech .mech__body .mech__p {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--t-body);
+  line-height: 1.65;
+  color: var(--paper-ink2);
+  text-wrap: pretty;
+}
+
+/* O primeiro parágrafo é a resposta curta: maior e com tinta cheia. */
+.mech .mech__body > .mech__p:first-child {
+  font-size: var(--t-lg);
+  line-height: 1.55;
+  color: var(--paper-ink);
+}
+
+/* A ressalva: sai do texto corrido e ganha caixa própria. */
+.mech .mech__note {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: var(--s-3);
+  font-family: var(--font-body);
+  font-size: var(--t-body);
+  line-height: 1.65;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--paper-line);
+  border-inline-start: 3px solid var(--signal-600);
+  background: var(--paper-3);
+  color: var(--paper-ink2);
+}
+
+.mech .mech__note-lead {
+  font-weight: 700;
+  color: var(--paper-ink);
+}
+
+.mech__chips {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.mech__chips-label {
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: var(--t-kicker);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.mech__chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1);
+}
+
+@media (min-width: 768px) {
+  .mech {
+    padding: var(--s-5);
+  }
+}
+
+@media (min-width: 1024px) {
+  .mech-layout {
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: var(--s-7);
+    align-items: start;
+  }
+
+  .mech-rail {
+    position: sticky;
+    inset-block-start: calc(var(--offer-h) + var(--nav-h) + var(--s-5));
+  }
+
+  .mech-rail__list {
+    flex-direction: column;
+    gap: var(--s-1);
+  }
+
+  .mech-rail__link {
+    justify-content: flex-start;
+    inline-size: 100%;
+    border-color: transparent;
+    border-radius: var(--radius-sm);
+    background: transparent;
+  }
+
+  .mech-rail__link:hover {
+    background: var(--paper);
+  }
+
+  .mech-rail__link[aria-current] {
+    background: var(--paper);
+    border-color: color-mix(in oklab, var(--primary-500) 55%, transparent);
+  }
+
+  .mech-list {
+    gap: var(--s-5);
+    max-inline-size: 700px;
+  }
+
+  .mech {
+    padding: var(--s-6);
+  }
+
+  .mech .mech__body {
+    max-inline-size: none;
+  }
+}
+
+/* ---------- O card de fecho: o único com a borda em órbita nesta seção ---------- */
+.ev-closing {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-4);
+  align-items: start;
+  inline-size: 100%;
+  padding: var(--s-5) var(--s-4);
+}
+
+.ev-closing__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.ev-closing .ev-closing__title {
+  margin: 0;
+  color: var(--paper-ink);
+}
+
+.ev-closing__lead {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--paper-ink);
+  text-wrap: balance;
+}
+
+.ev-closing__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  max-inline-size: 74ch;
+}
+
+.ev-closing .ev-closing__body p {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--t-body);
+  line-height: 1.65;
+  color: var(--paper-ink2);
+  text-wrap: pretty;
+}
+
+.ev-head > p + p,
+.ev-closing .ev-closing__body > p + p,
+.mech__body > .mech__p + .mech__p,
+.ev-proof > .ev-proof__gloss {
+  margin-block-start: calc(var(--flow-p) - var(--s-3));
+}
+
+@media (min-width: 768px) {
+  .ev-closing {
+    padding: var(--s-6);
+  }
+}
+
+@media (min-width: 1024px) {
+  .ev-closing {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: var(--s-7);
+    padding: var(--s-7) var(--s-6);
+  }
+}
+
+/* ---------- A amostra: um dado em destaque, com a origem ao lado ---------- */
+.ev-sample-figure {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  inline-size: 100%;
+  max-inline-size: 880px;
+  margin: 0;
+}
+
+.ev-sample {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  inline-size: 100%;
+  margin: 0;
+  padding: var(--s-4);
+  text-align: start;
+  border: 1px solid var(--paper-line);
+  border-inline-start: 3px solid var(--ok-ink);
+  border-radius: var(--radius-lg);
+  background: var(--paper);
+  box-shadow: var(--shadow-card);
+}
+
+.ev-sample__body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-inline-size: 0;
+}
+
+.ev-sample__label {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--t-kicker);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--ok-ink) 68%, var(--paper-ink));
+}
+
+.ev-sample__label::before {
+  content: '';
+  flex: 0 0 auto;
+  inline-size: 7px;
+  block-size: 7px;
+  border-radius: 2px;
+  background: var(--ok-ink);
+}
+
+.ev-sample__value {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 1.125rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.4;
+  color: var(--paper-ink);
+  overflow-wrap: anywhere;
+}
+
+.ev-sample__caption {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--t-sm);
+  line-height: 1.6;
+  color: var(--paper-ink2);
+  max-inline-size: 74ch;
+}
+
+@media (min-width: 768px) {
+  .ev-sample {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-5);
+    padding: var(--s-4) var(--s-5);
+  }
+
+  .ev-sample__body {
+    flex: 1 1 auto;
+  }
+
+  .ev-sample .cite-box {
+    flex: 0 1 auto;
+    max-inline-size: 42ch;
+  }
+}
+
+.band-paper strong,
+.grad-border strong {
+  font-weight: 700;
+  color: var(--paper-ink);
+}

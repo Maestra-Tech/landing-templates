@@ -1,0 +1,20 @@
+---
+import Heading from '@/components/ui/Heading.astro'
+import { visible } from '@/lib/sections'
+import { site } from '@/site.config'
+
+/** O problema: um título que acende palavra por palavra, um parágrafo e uma frase de fecho. */
+const { problem } = site
+---
+
+{
+  visible.problema && (
+    <section id="problema" class="section band-paper" data-section="problema" aria-labelledby="problema-title">
+      <div class="problem-shell" data-reveal>
+        <Heading id="problema-title" class="t-h2" parts={problem} words />
+        {problem.lead && <p class="t-lead">{problem.lead}</p>}
+        {problem.closing && <p class="t-body">{problem.closing}</p>}
+      </div>
+    </section>
+  )
+}

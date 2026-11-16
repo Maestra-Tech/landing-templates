@@ -1,0 +1,260 @@
+/* ============================================================
+   O QUE TROCAR PARA MUDAR A IDENTIDADE
+   ============================================================
+
+   Este arquivo é o ÚNICO lugar onde moram cores, fontes e cantos
+   arredondados. Nenhum outro arquivo escreve uma cor "na mão": todos
+   apontam para os nomes definidos aqui. Mudou aqui, mudou no site todo.
+
+   1. AS CORES — troque só os quatro números de MATIZ logo abaixo.
+      Matiz é a posição da cor num círculo de 0 a 360:
+        0–30 vermelho · 40–90 laranja/amarelo · 120–160 verde
+        170–210 turquesa · 230–270 azul · 280–310 roxo · 320–350 rosa
+        --primary-h    a cor principal da marca (brilhos, bordas, destaques)
+        --accent-h     a cor de apoio (começo do degradê dos botões)
+        --secondary-h  a terceira cor (fim do degradê)
+        --signal-h     a cor de detalhe (pontinho de aviso, foco do teclado)
+        --neutral-h    o tom dos cinzas e do fundo escuro (use o da principal)
+      Dica: matizes vizinhos (ex.: 250, 280, 320) dão um degradê suave.
+
+   2. AS FONTES — `--font-display` (títulos) e `--font-body` (textos).
+      Para usar outra fonte: instale o pacote dela (procure o nome em
+      fontsource.org; só use fontes livres), troque as duas linhas
+      `@import` abaixo e escreva o nome novo nas variáveis.
+
+   3. OS CANTOS — `--radius-sm` até `--radius-panel`. Números menores
+      deixam o site mais "reto"; maiores, mais arredondado.
+
+   4. O FUNDO E O TEXTO — `--bg` (fundo escuro), `--ink` (texto sobre o
+      escuro), `--paper` (fundo claro) e `--paper-ink` (texto sobre o
+      claro). Em geral não precisa mexer: eles acompanham `--neutral-h`.
+
+   5. O DEGRADÊ — `--grad` (botões) e `--grad-4` (bordas e brilhos).
+
+   Depois de trocar as cores, copie o valor de `--neutral-950` para o
+   campo `themeColor` em `src/site.config.ts` (é a cor da barra do
+   navegador no celular, que não consegue ler este arquivo).
+   ============================================================ */
+
+/* As fontes do modelo: Schibsted Grotesk e Source Sans 3, ambas de licença livre (OFL). */
+@import '@fontsource-variable/schibsted-grotesk/index.css';
+@import '@fontsource-variable/source-sans-3/index.css';
+
+:root {
+  /* ---------- 1. MATIZES — o coração da identidade ---------- */
+  --primary-h: 282;
+  --accent-h: 342;
+  --secondary-h: 258;
+  --signal-h: 185;
+  --neutral-h: 280;
+
+  /* ---------- 2. FONTES ---------- */
+  --font-display: 'Schibsted Grotesk Variable', 'Display Fallback', ui-sans-serif, sans-serif;
+  --font-body: 'Source Sans 3 Variable', 'Body Fallback', ui-sans-serif, sans-serif;
+  /* Rótulos pequenos em caixa alta e números de lista. Por padrão, a mesma fonte dos textos. */
+  --font-mono: var(--font-body);
+
+  /* ---------- 3. CANTOS ---------- */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-panel: 26px;
+  --radius-pill: 999px;
+
+  /* ---------- Escala da cor principal (do mais claro ao mais escuro) ---------- */
+  --primary-50: oklch(0.975 0.018 var(--primary-h));
+  --primary-100: oklch(0.94 0.045 var(--primary-h));
+  --primary-200: oklch(0.88 0.09 var(--primary-h));
+  --primary-300: oklch(0.8 0.14 var(--primary-h));
+  --primary-400: oklch(0.72 0.18 var(--primary-h));
+  --primary-500: oklch(0.648 0.21 var(--primary-h));
+  --primary-600: oklch(0.55 0.19 var(--primary-h));
+  --primary-700: oklch(0.45 0.155 var(--primary-h));
+  --primary-800: oklch(0.34 0.11 var(--primary-h));
+  --primary-900: oklch(0.24 0.07 var(--primary-h));
+  --primary-950: oklch(0.17 0.045 var(--primary-h));
+
+  /* ---------- Escala da cor de apoio ---------- */
+  --accent-50: oklch(0.975 0.016 var(--accent-h));
+  --accent-100: oklch(0.94 0.045 var(--accent-h));
+  --accent-200: oklch(0.88 0.09 var(--accent-h));
+  --accent-300: oklch(0.82 0.13 var(--accent-h));
+  --accent-400: oklch(0.75 0.165 var(--accent-h));
+  --accent-500: oklch(0.69 0.194 var(--accent-h));
+  --accent-600: oklch(0.58 0.185 var(--accent-h));
+  --accent-700: oklch(0.47 0.14 var(--accent-h));
+  --accent-800: oklch(0.36 0.1 var(--accent-h));
+  --accent-900: oklch(0.26 0.065 var(--accent-h));
+  --accent-950: oklch(0.18 0.04 var(--accent-h));
+
+  /* ---------- Escala da terceira cor ---------- */
+  --secondary-300: oklch(0.78 0.15 var(--secondary-h));
+  --secondary-400: oklch(0.69 0.19 var(--secondary-h));
+  --secondary-500: oklch(0.6 0.218 var(--secondary-h));
+  --secondary-600: oklch(0.5 0.19 var(--secondary-h));
+  --secondary-700: oklch(0.41 0.155 var(--secondary-h));
+
+  /* ---------- Escala da cor de detalhe ---------- */
+  --signal-300: oklch(0.87 0.095 var(--signal-h));
+  --signal-400: oklch(0.85 0.115 var(--signal-h));
+  --signal-500: oklch(0.83 0.132 var(--signal-h));
+  --signal-600: oklch(0.7 0.12 var(--signal-h));
+  --signal-700: oklch(0.52 0.1 var(--signal-h));
+
+  /* ---------- Cinzas, levemente tingidos pela cor da marca ---------- */
+  --neutral-50: oklch(0.943 0.019 var(--neutral-h));
+  --neutral-100: oklch(0.88 0.016 var(--neutral-h));
+  --neutral-200: oklch(0.8 0.018 var(--neutral-h));
+  --neutral-300: oklch(0.74 0.046 var(--neutral-h));
+  --neutral-400: oklch(0.64 0.05 var(--neutral-h));
+  --neutral-500: oklch(0.552 0.06 var(--neutral-h));
+  --neutral-600: oklch(0.46 0.048 var(--neutral-h));
+  --neutral-700: oklch(0.36 0.038 var(--neutral-h));
+  --neutral-800: oklch(0.222 0.048 var(--neutral-h));
+  --neutral-850: oklch(0.189 0.028 var(--neutral-h));
+  --neutral-900: oklch(0.157 0.023 var(--neutral-h));
+  --neutral-950: oklch(0.135 0.018 var(--neutral-h));
+
+  /* ---------- 4. FUNDO E TEXTO · faixas escuras ---------- */
+  --bg: var(--neutral-950);
+  --bg-2: var(--neutral-900);
+  --raised: var(--neutral-850);
+  --raised-2: var(--neutral-800);
+  --ink: var(--neutral-50);
+  --ink-2: var(--neutral-300);
+  --ink-3: var(--neutral-400);
+  --line: color-mix(in oklab, var(--neutral-50) 9%, transparent);
+  --line-2: color-mix(in oklab, var(--neutral-50) 16%, transparent);
+
+  /* ---------- 4. FUNDO E TEXTO · faixas claras ("papel") ---------- */
+  --paper: oklch(0.985 0.006 var(--neutral-h));
+  --paper-2: oklch(0.975 0.007 var(--neutral-h));
+  --paper-3: oklch(0.95 0.012 var(--neutral-h));
+  --paper-line: oklch(0.924 0.015 var(--neutral-h));
+  --paper-ink: oklch(0.196 0.024 var(--neutral-h));
+  --paper-ink2: oklch(0.409 0.043 var(--neutral-h));
+  --paper-ink3: oklch(0.5 0.04 var(--neutral-h));
+
+  /* O texto que vai por cima do degradê dos botões. */
+  --on-grad: oklch(0.99 0.004 var(--neutral-h));
+
+  /* ---------- 5. DEGRADÊS ---------- */
+  --grad: linear-gradient(
+    110deg,
+    var(--accent-600) 0%,
+    var(--primary-600) 48%,
+    var(--secondary-600) 100%
+  );
+  --grad-4: linear-gradient(
+    110deg,
+    var(--accent-500) 0%,
+    var(--primary-500) 40%,
+    var(--secondary-500) 70%,
+    var(--signal-500) 100%
+  );
+  /* O degradê de texto sobre fundo claro usa os tons escuros, para dar leitura. */
+  --grad-text-paper: linear-gradient(
+    90deg,
+    var(--primary-700) 0%,
+    var(--secondary-600) 55%,
+    var(--primary-700) 100%
+  );
+
+  /* ---------- Papéis de cor (apelidos usados pelo resto do site) ---------- */
+  --brand: var(--primary-500);
+  --brand-on-paper: var(--primary-700);
+  --focus: var(--signal-500);
+  --focus-on-paper: var(--primary-600);
+
+  /* ---------- Sombras ---------- */
+  --shadow-color: oklch(0.16 0.03 var(--neutral-h));
+  --shadow-raised: 0 20px 50px -24px color-mix(in oklab, var(--primary-500) 40%, transparent);
+  --shadow-paper: 0 30px 80px -34px color-mix(in oklab, var(--shadow-color) 85%, transparent);
+  --shadow-soft: 0 10px 28px -26px color-mix(in oklab, var(--shadow-color) 50%, transparent);
+  --shadow-nav: 0 12px 40px -24px color-mix(in oklab, var(--shadow-color) 70%, transparent);
+  --shadow-cta:
+    0 0 0 1px color-mix(in oklab, var(--primary-500) 35%, transparent),
+    0 10px 34px -8px color-mix(in oklab, var(--primary-500) 55%, transparent);
+  --glow-signal: 0 0 9px color-mix(in oklab, var(--signal-500) 80%, transparent);
+
+  /* Relevo das peças "metálicas" (pílulas, botão de entrada, ícones do rodapé). */
+  --bevel-light: oklch(1 0 0 / 0.9);
+  --bevel-dark: color-mix(in oklab, var(--shadow-color) 65%, transparent);
+  --shadow-deep: 0 14px 26px -16px color-mix(in oklab, var(--shadow-color) 90%, transparent);
+  --shadow-card: 0 18px 44px -34px color-mix(in oklab, var(--shadow-color) 70%, transparent);
+  --shadow-ink: 0 12px 28px -20px color-mix(in oklab, var(--shadow-color) 90%, transparent);
+
+  /* A moldura do celular da demonstração. */
+  --phone-bezel: oklch(0.114 0.018 var(--neutral-h));
+
+  /* Verde de "confirmado", usado no trilho da amostra da seção Por dentro. */
+  --ok-ink: oklch(0.56 0.12 162);
+
+  /* Tintas técnicas das máscaras (recortes de efeito). Não são cores visíveis. */
+  --mask-solid: oklch(0 0 0);
+  --mask-soft: oklch(0 0 0 / 0.55);
+
+  /* ---------- Tamanhos de texto ---------- */
+  --t-hero: clamp(2.125rem, 1.2rem + 4vw, 3.75rem);
+  --t-h2: clamp(1.875rem, 1.1rem + 3.6vw, 3.25rem);
+  --t-h3: 1.3125rem;
+  --t-lg: 1.125rem;
+  --t-body: 1.0625rem;
+  --t-sm: 0.875rem;
+  --t-xs: 0.78125rem;
+  --t-mono: 0.8125rem;
+  --t-kicker: 0.6875rem;
+
+  /* ---------- Espaços ---------- */
+  --s-1: 6px;
+  --s-2: 10px;
+  --s-3: 14px;
+  --s-4: 18px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 44px;
+  --s-8: 64px;
+  --s-9: 92px;
+
+  /* O espaço entre dois parágrafos vizinhos de um mesmo bloco de leitura. */
+  --flow-p: 24px;
+
+  /* ---------- Larguras do conteúdo ---------- */
+  --shell-wide: clamp(1180px, 92vw, 1920px);
+  --shell-read: 1180px;
+  --shell-narrow: 820px;
+
+  /* ---------- Barra do topo ----------
+     No celular a barra tem duas linhas (marca em cima, botão embaixo); a altura é a soma. */
+  --offer-h: 32px;
+  --nav-h: calc(2 * var(--s-2) + 36px + var(--s-1) + 44px);
+
+  /* ---------- Movimento ---------- */
+  --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
+  --dur-enter: 260ms;
+  --dur-press: 90ms;
+  --dur-state: 140ms;
+  --dur-layout: 200ms;
+
+  /* ---------- Camadas ---------- */
+  --z-nav: 50;
+  --z-overlay: 60;
+}
+
+/* A partir de 640px a barra volta a ter uma linha só. */
+@media (min-width: 640px) {
+  :root {
+    --nav-h: 64px;
+  }
+}
+
+/* Telas de cores mais vivas ganham destaques mais intensos. */
+@media (color-gamut: p3) {
+  :root {
+    --primary-400: oklch(0.72 0.22 var(--primary-h));
+    --primary-500: oklch(0.648 0.25 var(--primary-h));
+    --accent-500: oklch(0.69 0.23 var(--accent-h));
+    --secondary-500: oklch(0.6 0.255 var(--secondary-h));
+    --signal-500: oklch(0.83 0.16 var(--signal-h));
+  }
+}

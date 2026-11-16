@@ -1,0 +1,70 @@
+/* ============================================================
+   FUNCIONALIDADES — a grade "bento".
+
+   No computador, os cards formam uma grade de larguras variadas (os marcados como `wide` ocupam
+   mais espaço). No celular, eles se empilham como cartas: cada card gruda no topo e o seguinte
+   desliza por cima dele.
+   ============================================================ */
+.bento {
+  display: grid;
+  gap: var(--s-4);
+  inline-size: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bento > [data-feature] {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  padding: var(--s-5);
+}
+
+.bento__proof {
+  margin-block-start: auto;
+}
+
+.bento__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1);
+  margin-block-start: auto;
+}
+
+@media (max-width: 767px) {
+  .bento {
+    display: block;
+    padding-block-end: var(--s-8);
+  }
+
+  .bento > [data-feature] {
+    position: sticky;
+    top: calc(var(--offer-h) + var(--nav-h) + 10px);
+    margin-block-end: var(--s-4);
+  }
+}
+
+@media (min-width: 768px) {
+  .bento {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .bento > [data-feature] {
+    grid-column: span 3;
+  }
+
+  .bento > [data-feature][data-wide] {
+    grid-column: span 6;
+  }
+}
+
+@media (min-width: 1024px) {
+  .bento > [data-feature] {
+    grid-column: span 2;
+  }
+
+  .bento > [data-feature][data-wide] {
+    grid-column: span 3;
+  }
+}

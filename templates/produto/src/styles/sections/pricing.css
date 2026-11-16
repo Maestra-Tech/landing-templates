@@ -1,0 +1,307 @@
+/* ============================================================
+   PREÇOS — cards de plano, faixa de destaque e opções de pagamento.
+
+   Todos os cards usam a mesma casca (borda em degradê). O que muda é o conteúdo: o card de plano
+   tem selo, preço grande, preço riscado opcional, condições, botão e lista; o card de opção é
+   menor e serve para comparar formas de pagamento (mensal, anual...).
+   ============================================================ */
+.pricing-shell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-7);
+  margin-inline: auto;
+  padding-inline: var(--s-4);
+  max-inline-size: var(--shell-wide);
+}
+
+.pricing-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  max-inline-size: 62ch;
+}
+
+.plan-grid {
+  display: grid;
+  gap: var(--s-4);
+  inline-size: 100%;
+}
+
+@media (min-width: 1024px) {
+  .plan-grid {
+    grid-template-columns: repeat(var(--plan-cols, 2), minmax(0, 1fr));
+    align-items: stretch;
+  }
+}
+
+.plan-card {
+  block-size: 100%;
+  padding: var(--s-5);
+}
+
+@media (min-width: 640px) {
+  .plan-card {
+    padding: var(--s-6);
+  }
+}
+
+.plan-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  block-size: 100%;
+}
+
+.plan-card__badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2);
+  margin: 0;
+}
+
+.plan-card__badge-detail {
+  font-size: var(--t-sm);
+  font-weight: 600;
+  color: var(--paper-ink2);
+}
+
+.card-label {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--t-sm);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--paper-ink2);
+}
+
+.list-label {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--t-xs);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--paper-ink2);
+}
+
+.pricing-head .list-label {
+  align-self: flex-start;
+}
+
+.card-note {
+  margin: 0;
+  font-size: var(--t-sm);
+  line-height: 1.6;
+  color: var(--paper-ink2);
+  text-wrap: pretty;
+}
+
+.card-strong {
+  margin: 0;
+  font-size: var(--t-sm);
+  line-height: 1.6;
+  font-weight: 600;
+  color: var(--paper-ink);
+  text-wrap: pretty;
+}
+
+.card-fine {
+  margin: 0;
+  font-size: var(--t-xs);
+  line-height: 1.6;
+  color: var(--paper-ink2);
+}
+
+/* ---------- O par de preços: o riscado em cima, o que vale embaixo ---------- */
+.price-pair {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+}
+
+.price-pair__list {
+  font-size: clamp(17px, 2.4vw, 22px);
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--paper-ink2);
+}
+
+.price-pair__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s-2);
+  margin: 0;
+}
+
+.price-pair__value {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 8vw, 64px);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--paper-ink);
+}
+
+.price-pair__unit {
+  font-size: clamp(15px, 1.8vw, 19px);
+  font-weight: 600;
+  color: var(--paper-ink2);
+}
+
+.price-pair--sm .price-pair__value {
+  font-size: clamp(28px, 6vw, 38px);
+}
+
+.price-pair--sm .price-pair__unit {
+  font-size: clamp(13px, 1.6vw, 15px);
+}
+
+.plan-card__includes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.plan-card__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.plan-card__list li {
+  display: flex;
+  gap: var(--s-2);
+  font-size: var(--t-sm);
+  line-height: 1.5;
+  color: var(--paper-ink2);
+}
+
+.plan-card__list .seal {
+  inline-size: 18px;
+  block-size: 18px;
+  margin-block-start: 0.1em;
+}
+
+/* ---------- As opções (cards menores) ---------- */
+.option-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+}
+
+.option-block__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  max-inline-size: 62ch;
+}
+
+.option-band__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.option-band__body p:not(.t-h3) {
+  margin: 0;
+  font-size: var(--t-sm);
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+.option-grid {
+  display: grid;
+  gap: var(--s-4);
+  inline-size: 100%;
+}
+
+@media (min-width: 640px) {
+  .option-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1280px) {
+  .option-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: stretch;
+  }
+}
+
+.option-card__badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2);
+  min-block-size: 24px;
+  margin: 0;
+}
+
+.option-card__facts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+}
+
+.option-card__action {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  margin-block-start: auto;
+}
+
+.option-card__action .card-fine {
+  line-height: 1.5;
+}
+
+.pricing-footer {
+  max-inline-size: 72ch;
+}
+
+/* ---------- Depoimentos (seção opcional; usa a mesma casca de card) ---------- */
+.quote-grid {
+  display: grid;
+  gap: var(--s-4);
+  inline-size: 100%;
+}
+
+@media (min-width: 768px) {
+  .quote-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+}
+
+.quote-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  margin: 0;
+  padding: var(--s-5);
+}
+
+.quote-card blockquote {
+  margin: 0;
+  font-size: var(--t-lg);
+  line-height: 1.55;
+  color: var(--paper-ink);
+  text-wrap: pretty;
+}
+
+.quote-card figcaption {
+  display: flex;
+  flex-direction: column;
+  margin-block-start: auto;
+  font-size: var(--t-sm);
+  color: var(--paper-ink2);
+}
+
+.quote-card figcaption strong {
+  color: var(--paper-ink);
+}

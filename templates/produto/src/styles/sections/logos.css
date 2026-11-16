@@ -1,0 +1,143 @@
+/* ============================================================
+   FAIXA DE LOGOS — uma esteira que anda sozinha.
+
+   A lista é escrita três vezes, uma depois da outra; a faixa desliza exatamente uma cópia e
+   recomeça, e por isso a emenda não aparece. As bordas somem em degradê. Passar o mouse (ou focar
+   pelo teclado) pausa a esteira. Com "reduzir movimento" ligado, ela vira uma grade parada.
+   ============================================================ */
+.logo-band {
+  position: relative;
+  z-index: 2;
+  padding-block: calc(var(--s-3) * 1.5);
+  background: var(--paper);
+  color: var(--paper-ink);
+  border-block: 1px solid var(--paper-line);
+  text-align: center;
+}
+
+.logo-band__inner {
+  margin-inline: auto;
+  padding-inline: var(--s-4);
+  max-inline-size: var(--shell-wide);
+}
+
+.logo-band__label {
+  margin: 0 0 var(--s-2);
+  font-family: var(--font-body);
+  font-size: var(--t-kicker);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--paper-ink2);
+}
+
+.logo-band__note {
+  margin: var(--s-2) auto 0;
+  font-size: var(--t-kicker);
+  line-height: 1.45;
+  color: var(--paper-ink3);
+  max-inline-size: 72ch;
+  text-wrap: pretty;
+}
+
+.logo-marquee {
+  --logo-gap: clamp(40px, 4.6vw, 66px);
+  --logo-copies: 3;
+  --logo-duration: 48s;
+
+  position: relative;
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, var(--mask-solid) 10%, var(--mask-solid) 90%, transparent);
+}
+
+.logo-marquee__track {
+  display: flex;
+  inline-size: max-content;
+  animation: logo-marquee-x var(--logo-duration) linear infinite;
+  will-change: transform;
+}
+
+.logo-marquee__row {
+  display: flex;
+  align-items: center;
+  gap: var(--logo-gap);
+  /* O vão entre as cópias fica dentro de cada cópia; é isso que faz a volta fechar sem tranco. */
+  padding: 0 var(--logo-gap) 0 0;
+  margin: 0;
+  list-style: none;
+}
+
+.logo-marquee:hover .logo-marquee__track,
+.logo-marquee:focus-within .logo-marquee__track {
+  animation-play-state: paused;
+}
+
+@keyframes logo-marquee-x {
+  to {
+    transform: translateX(calc(-100% / var(--logo-copies)));
+  }
+}
+
+.logo-item {
+  --logo-scale: 1.5;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  block-size: 66px;
+  min-inline-size: 0;
+}
+
+/* Imagens entram em tons de cinza, para marcas de cores diferentes parecerem uma família. */
+.logo-item img {
+  block-size: calc(var(--logo-h, 28px) * var(--logo-scale));
+  inline-size: auto;
+  max-inline-size: 225px;
+  object-fit: contain;
+  filter: grayscale(1) opacity(0.78);
+  transition: filter 220ms var(--ease-out);
+}
+
+/* Sem imagem, o nome sai escrito, com um símbolo genérico ao lado. */
+.logo-word {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-family: var(--font-display);
+  font-size: calc(15px * var(--logo-scale));
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  color: var(--paper-ink2);
+  opacity: 0.78;
+  transition: opacity 220ms var(--ease-out);
+}
+
+.logo-word svg {
+  inline-size: 1.1em;
+  block-size: 1.1em;
+  flex: none;
+}
+
+.logo-marquee:hover .logo-item img,
+.logo-marquee:focus-within .logo-item img {
+  filter: grayscale(1) opacity(1);
+}
+
+.logo-marquee:hover .logo-word,
+.logo-marquee:focus-within .logo-word {
+  opacity: 1;
+}
+
+@media (width <= 640px) {
+  .logo-item {
+    --logo-scale: 1.23;
+
+    block-size: 57px;
+  }
+
+  .logo-item img {
+    max-inline-size: 177px;
+  }
+}

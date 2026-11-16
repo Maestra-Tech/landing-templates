@@ -1,0 +1,88 @@
+---
+import Heading from '@/components/ui/Heading.astro'
+import { visible } from '@/lib/sections'
+import { site } from '@/site.config'
+
+/**
+ * A demonstração: o celular à esquerda, os capítulos à direita.
+ *
+ * Como funciona, do mais simples ao mais rico:
+ *  - Sem JavaScript: cada pílula é um link para a tela dela, e o CSS (`:target`) mostra a tela
+ *    apontada. Os capítulos são uma lista de textos comum.
+ *  - Com `scripts/demo.ts`: clicar na pílula troca a tela sem mexer no endereço; no computador o
+ *    celular fica fixo e o capítulo no meio da tela escolhe a tela; e a demonstração avança
+ *    sozinha (ao fim do vídeo de cada tela ou, sem vídeo, a cada N segundos no celular).
+ *
+ * As telas ficam todas montadas, uma sobre a outra, e só a opacidade muda: é o que evita o
+ * "pisca" de trocar a imagem de lugar.
+ */
+const { demo } = site
+const first = demo.items[0]?.key
+---
+
+{
+  visible.demo && (
+    <section id="demo" class="section band-cinema" data-section="demo" data-demo aria-labelledby="demo-title">
+      <div class="demo-grid">
+        <div class="jstage" data-demo-stage data-auto-seconds={demo.autoAdvanceSeconds}>
+          <ul class="jstage__pills" role="list" aria-label={demo.pillsLabel}>
+            {demo.items.map((item) => (
+              <li>
+                <a
+                  href={`#demo-tela-${item.key}`}
+                  class="jpill"
+                  data-demo-pill={item.key}
+                  aria-current={item.key === first ? 'true' : 'false'}
+                >
+                  {item.pill}
+                </a>
+              </li>
+            ))}
+          </ul>
+
+          <div class="jstage__phone">
+            <div class="phone-frame">
+              <div class="phone-shell">
+                {demo.items.map((item, index) => (
+                  <img
+                    class="jlayer"
+                    id={`demo-tela-${item.key}`}
+                    data-demo-layer={item.key}
+                    data-active={item.key === first ? 'true' : 'false'}
+                    data-video-desktop={item.video?.desktop || undefined}
+                    data-video-mobile={item.video?.mobile || item.video?.desktop || undefined}
+                    src={item.image.src}
+                    alt={item.image.alt}
+                    width={item.image.width}
+                    height={item.image.height}
+                    decoding="async"
+                    loading={index === 0 ? 'eager' : 'lazy'}
+                    fetchpriority="low"
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-side">
+          <header class="demo-side__header" data-reveal>
+            <Heading id="demo-title" class="t-h2" parts={demo} />
+            {demo.lead && <p class="t-lead">{demo.lead}</p>}
+          </header>
+
+          <ul class="demo-chapters" role="list">
+            {demo.items.map((item, index) => (
+              <li data-chapter={item.key} data-current={item.key === first ? 'true' : 'false'}>
+                <div class="demo-chapter" data-reveal style={`--reveal-index:${index}`}>
+                  <h3 class="t-h3">{item.title}</h3>
+                  <p class="t-body">{item.text}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+  )
+}

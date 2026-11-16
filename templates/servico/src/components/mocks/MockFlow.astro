@@ -1,0 +1,79 @@
+---
+// MOCK · diagrama de fluxo, de cima para baixo, com fios entre as linhas.
+interface Props {
+  label: string;
+  rows: { items: string[]; style?: 'outline' | 'highlight' | 'plain' | 'dashed' }[];
+  [key: string]: unknown;
+}
+
+const { label, rows } = Astro.props;
+---
+
+<span class="flow__label">{label}</span>
+{
+  rows.map((row, index) => (
+    <>
+      {index > 0 && <div class="flow__wire" aria-hidden="true" />}
+      <div class="flow__row">
+        {row.items.map((item) => (
+          <span class:list={['flow__box', `flow__box--${row.style ?? 'plain'}`]}>{item}</span>
+        ))}
+      </div>
+    </>
+  ))
+}
+
+<style>
+  .flow__label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--ink) 72%, transparent);
+  }
+
+  .flow__row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .flow__wire {
+    align-self: center;
+    width: 1px;
+    height: 16px;
+    background: linear-gradient(to bottom, color-mix(in srgb, var(--accent-2) 60%, transparent), color-mix(in srgb, var(--accent-2) 15%, transparent));
+  }
+
+  .flow__box {
+    padding: 6px 10px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    text-align: center;
+    color: color-mix(in srgb, var(--ink) 80%, transparent);
+  }
+
+  .flow__box--outline {
+    padding: 7px 14px;
+    border-color: var(--line-strong);
+    font-size: 14px;
+    color: color-mix(in srgb, var(--ink) 85%, transparent);
+  }
+
+  .flow__box--highlight {
+    padding: 7px 16px;
+    border-color: color-mix(in srgb, var(--accent-2) 50%, transparent);
+    background: color-mix(in srgb, var(--accent-2) 7%, transparent);
+    box-shadow: 0 0 24px color-mix(in srgb, var(--accent-2) 15%, transparent);
+    font-size: 14px;
+    color: var(--ink);
+  }
+
+  .flow__box--dashed {
+    border: 1px dashed color-mix(in srgb, var(--ink) 25%, transparent);
+    color: color-mix(in srgb, var(--ink) 85%, transparent);
+  }
+</style>

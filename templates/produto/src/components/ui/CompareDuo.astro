@@ -1,0 +1,60 @@
+---
+import Seal from './Seal.astro'
+
+/**
+ * Dois cards lado a lado: o "apagado" à esquerda e o "brilhante" à direita.
+ * Usado pelo Comparativo e pelo Antes/Depois. Cada linha pode ter um termo em negrito.
+ */
+interface Row {
+  term?: string
+  text: string
+}
+
+interface Props {
+  dim: { title: string; items: Row[] }
+  bright: { title: string; items: Row[] }
+}
+
+const { dim, bright } = Astro.props
+---
+
+<div class="compare-duo">
+  <div class="compare-dim" data-compare-side="dim" data-reveal>
+    <h3 class="t-h3 compare-duo__title">{dim.title}</h3>
+    <ul class="compare-duo__list" role="list">
+      {
+        dim.items.map((row) => (
+          <li>
+            {row.term && (
+              <>
+                <strong>{row.term}</strong> —{' '}
+              </>
+            )}
+            {row.text}
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <div class="compare-bright grad-border" data-compare-side="bright" data-glow-card data-reveal>
+    <h3 class="t-h3 compare-duo__title">{bright.title}</h3>
+    <ul class="compare-duo__list" role="list">
+      {
+        bright.items.map((row) => (
+          <li class="compare-duo__marked">
+            <Seal class="compare-duo__seal" />
+            <span>
+              {row.term && (
+                <>
+                  <strong>{row.term}</strong> —{' '}
+                </>
+              )}
+              {row.text}
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</div>

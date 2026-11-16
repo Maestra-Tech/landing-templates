@@ -1,0 +1,179 @@
+/* ============================================================
+   RODAPÉ — marca, redes, links e nota.
+   ============================================================ */
+.site-footer {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: var(--s-7) 0 var(--s-5);
+  border-block-start: 1px solid var(--line);
+  background-color: var(--bg);
+  color: var(--ink);
+}
+
+.site-footer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(55% 80% at 8% 0%, color-mix(in oklab, var(--primary-500) 20%, transparent), transparent 70%),
+    radial-gradient(45% 70% at 92% 100%, color-mix(in oklab, var(--secondary-500) 14%, transparent), transparent 72%);
+}
+
+.site-footer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, var(--line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+  background-size: 56px 56px;
+  opacity: 0.4;
+}
+
+.site-footer > * {
+  position: relative;
+  z-index: 1;
+}
+
+.site-footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  max-width: var(--shell-wide);
+  margin-inline: auto;
+  padding-inline: var(--s-4);
+}
+
+.site-footer__brand {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.site-footer__tagline {
+  margin: 0;
+  max-width: 36ch;
+  font-family: var(--font-body);
+  font-size: var(--t-sm);
+  color: var(--ink-2);
+}
+
+.site-footer__company {
+  margin: var(--s-1) 0 0;
+  font-size: var(--t-xs);
+  line-height: 1.55;
+  font-style: normal;
+  color: var(--ink-3);
+}
+
+.site-footer__icons {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+/* Botões "metálicos": relevo em cima, borda discreta, sobem um pixel ao passar o mouse. */
+.site-footer__icon {
+  display: grid;
+  place-items: center;
+  inline-size: 44px;
+  block-size: 44px;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  color: var(--ink);
+  background-color: var(--neutral-700);
+  background-image: linear-gradient(180deg, var(--neutral-700) 0%, var(--neutral-800) 100%);
+  border: 1px solid var(--neutral-500);
+  box-shadow: inset 0 1px 0 color-mix(in oklab, var(--neutral-200) 28%, transparent);
+  transition:
+    transform var(--dur-press) var(--ease-out),
+    border-color var(--dur-state),
+    background-color var(--dur-state);
+}
+
+.site-footer__icon svg {
+  display: block;
+  inline-size: 22px;
+  block-size: 22px;
+  transition: transform var(--dur-press) var(--ease-out);
+}
+
+.site-footer__icon:hover,
+.site-footer__icon:focus-visible {
+  border-color: var(--neutral-300);
+  background-image: linear-gradient(180deg, var(--neutral-600) 0%, var(--neutral-700) 100%);
+  transform: translateY(-1px);
+}
+
+.site-footer__icon:hover svg,
+.site-footer__icon:focus-visible svg {
+  transform: scale(1.08);
+}
+
+.site-footer__bar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  max-width: var(--shell-wide);
+  margin: var(--s-5) auto 0;
+  padding: var(--s-4) var(--s-4) 0;
+  border-block-start: 1px solid var(--line);
+}
+
+.site-footer__legal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--s-3);
+  row-gap: 4px;
+}
+
+.site-footer__legal a {
+  position: relative;
+  font-family: var(--font-body);
+  font-size: var(--t-xs);
+  font-weight: 600;
+  color: var(--ink-2);
+  text-decoration: none;
+  padding-block: 6px;
+}
+
+.site-footer__legal a:not(:last-child)::after {
+  content: '·';
+  position: absolute;
+  inset-inline-end: calc(-1 * var(--s-3) / 2 - 0.15em);
+  color: var(--ink-3);
+  pointer-events: none;
+}
+
+.site-footer__legal a:hover {
+  color: var(--ink);
+}
+
+.site-footer__note {
+  margin: 0;
+  max-width: 72ch;
+  font-size: var(--t-xs);
+  line-height: 1.55;
+  color: var(--ink-3);
+}
+
+@media (min-width: 768px) {
+  .site-footer__bar {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .site-footer__note {
+    max-width: 42ch;
+    text-align: end;
+  }
+}

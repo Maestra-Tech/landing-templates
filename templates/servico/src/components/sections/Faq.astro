@@ -1,0 +1,146 @@
+---
+// PERGUNTAS FREQUENTES — lista que abre e fecha. Usa <details> (funciona sem
+// JavaScript); o script src/scripts/faq.ts acrescenta a animação de altura e
+// faz abrir uma pergunta fechar as outras. No fim, a caixa de recado.
+import { site } from '../../site.config';
+import SectionHead from '../ui/SectionHead.astro';
+import { rich } from '../../lib/rich';
+
+const faq = site.faq;
+const show = faq.enabled && faq.items.length > 0;
+const hasNote = faq.note.accent || faq.note.text;
+---
+
+{
+  show && (
+    <section class="section section--narrow faq" id="duvidas">
+      <SectionHead eyebrow={faq.eyebrow} title={faq.title} titleAccent={faq.titleAccent} titleAfter={faq.titleAfter} text={faq.text} accent="white" />
+
+      <div class="faq__list" data-reveal data-faq>
+        {faq.items.map((item) => (
+          <details class="faq__item">
+            <summary class="faq__question">
+              <span>{item.question}</span>
+              <span class="faq__chev" aria-hidden="true">+</span>
+            </summary>
+            <div class="faq__answer" data-ans>
+              <p>{item.answer}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+
+      {hasNote && (
+        <div class="faq__note" data-reveal>
+          <p class="rich" data-wordreveal>
+            {faq.note.accent && <span class="faq__note-accent grad-text grad-text--a" data-k>{faq.note.accent}</span>}{' '}
+            <Fragment set:html={rich(faq.note.text)} />
+          </p>
+        </div>
+      )}
+    </section>
+  )
+}
+
+<style>
+  .faq {
+    gap: clamp(18px, 3vh, 36px);
+  }
+
+  .faq :global(.h2) {
+    font-size: clamp(30px, 3.8vw, 52px);
+    line-height: 1.08;
+  }
+
+  .faq__list {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--line);
+  }
+
+  .faq__item {
+    border-bottom: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+  }
+
+  .faq__question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 22px 4px;
+    color: var(--ink);
+    font-size: clamp(17px, 1.5vw, 19px);
+    font-weight: 600;
+    line-height: 1.4;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .faq__question::-webkit-details-marker {
+    display: none;
+  }
+
+  /* O "+" que gira e vira "x" quando a pergunta está aberta. */
+  .faq__chev {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    font-size: 18px;
+    font-weight: 400;
+    color: color-mix(in srgb, var(--ink) 90%, transparent);
+    transition: transform 300ms ease-out;
+  }
+
+  .faq__item[open] .faq__chev {
+    transform: rotate(45deg);
+  }
+
+  /* Com a animação ligada, o script controla o giro pela classe .is-open
+     (assim o "+" volta junto com o fechamento). */
+  :global(.js-faq) .faq__item[open]:not(.is-open) .faq__chev {
+    transform: none;
+  }
+
+  .faq__answer p {
+    margin: 0 4px 22px;
+    font-size: clamp(16px, 1.3vw, 18.5px);
+    line-height: 1.65;
+    color: color-mix(in srgb, var(--ink) 90%, transparent);
+  }
+
+  /* Animação de altura (só quando o script está ativo). */
+  :global(.js-faq) .faq__answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 350ms ease-out;
+  }
+
+  /* ---- Caixa de recado ---- */
+  .faq__note {
+    padding: clamp(24px, 3vw, 40px);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--surface) 92%, transparent);
+    color: var(--ink);
+  }
+
+  .faq__note p {
+    font-size: clamp(18px, 1.7vw, 22px);
+    line-height: 1.65;
+    color: var(--ink-soft);
+  }
+
+  .faq__note-accent {
+    font-family: var(--font-decorative);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(27px, 2.8vw, 40px);
+    line-height: 1.2;
+    padding-inline-end: 0.1em;
+  }
+</style>

@@ -1,0 +1,324 @@
+/* ============================================================
+   DEMONSTRAÇÃO — o celular, as pílulas e os capítulos.
+
+   Cada pílula troca a tela que aparece dentro do celular (as telas ficam empilhadas e só a
+   opacidade muda). No computador, o celular fica fixo enquanto os capítulos rolam ao lado, e o
+   capítulo que está no meio da tela escolhe a tela do celular.
+   ============================================================ */
+.demo-grid {
+  display: grid;
+  gap: var(--s-6);
+  margin-inline: auto;
+  padding-inline: var(--s-4);
+  max-inline-size: var(--shell-wide);
+}
+
+.demo-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+  min-inline-size: 0;
+}
+
+.demo-side__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.jstage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+  min-inline-size: 0;
+}
+
+.jstage__pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.jstage__phone {
+  position: relative;
+  margin-inline: auto;
+  inline-size: 100%;
+  max-inline-size: 344px;
+}
+
+@media (min-width: 640px) {
+  .jstage__phone {
+    max-inline-size: 360px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .demo-grid {
+    grid-template-columns: minmax(0, 420px) minmax(0, 1fr);
+    align-items: start;
+    gap: var(--s-8);
+  }
+
+  .jstage {
+    position: sticky;
+    inset-block-start: calc(var(--offer-h) + var(--nav-h) + 16px);
+  }
+}
+
+[data-demo-stage],
+[data-demo-pill] {
+  scroll-margin-top: calc(var(--offer-h) + var(--nav-h) + 12px);
+}
+
+/* ---------- A moldura do celular ---------- */
+.phone-frame {
+  position: relative;
+  border-radius: 34px;
+  border: 1px solid var(--line-2);
+  background: var(--phone-bezel);
+  padding: 10px;
+  box-shadow: var(--shadow-raised);
+}
+
+.phone-shell {
+  position: relative;
+  aspect-ratio: 433 / 882;
+  overflow: hidden;
+  border-radius: 26px;
+  background: var(--phone-bezel);
+}
+
+.phone-shell > :where(img, video) {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+/* ---------- As telas empilhadas ---------- */
+.jlayer {
+  opacity: 0;
+  transition: opacity 350ms var(--ease-out);
+}
+
+.jlayer[data-active='true'] {
+  opacity: 1;
+}
+
+/* Sem JavaScript, a pílula é um link de verdade e a tela apontada pelo endereço vence. */
+.jstage:has(:target) .jlayer[data-active='true'] {
+  opacity: 0;
+}
+
+.jstage:has(:target) .jlayer:target[data-active] {
+  opacity: 1;
+}
+
+/* O vídeo de uma tela cobre a imagem dela, e só depois de começar a tocar. */
+.jvideo {
+  opacity: 0;
+  transition: opacity 350ms var(--ease-out);
+}
+
+.jvideo[data-playing='true'] {
+  opacity: 1;
+}
+
+.jlayer:not([data-active='true']) + .jvideo {
+  opacity: 0;
+}
+
+/* ---------- As pílulas ----------
+   Papel elevado: luz em cima, sombra embaixo, borda em degradê. */
+.jpill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 44px;
+  padding-inline: var(--s-4);
+  overflow: hidden;
+  isolation: isolate;
+  z-index: 0;
+  font-size: var(--t-sm);
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--paper-ink);
+  border: 2px solid transparent;
+  border-radius: var(--radius-pill);
+  background:
+    linear-gradient(180deg, var(--paper) 0%, var(--paper-2) 54%, var(--paper-3) 100%) padding-box,
+    var(--grad-4) border-box;
+  box-shadow:
+    inset 0 1px 0 var(--bevel-light),
+    inset 0 -3px 6px -3px color-mix(in oklab, var(--paper-ink) 34%, transparent),
+    0 1px 1px color-mix(in oklab, var(--paper-ink) 24%, transparent),
+    0 10px 18px -12px color-mix(in oklab, var(--paper-ink) 68%, transparent);
+  transition:
+    box-shadow var(--dur-state) var(--ease-out),
+    color var(--dur-state) var(--ease-out),
+    background var(--dur-state) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .jpill:hover {
+    box-shadow:
+      inset 0 1px 0 var(--bevel-light),
+      inset 0 -3px 6px -3px color-mix(in oklab, var(--paper-ink) 26%, transparent),
+      0 1px 1px color-mix(in oklab, var(--paper-ink) 26%, transparent),
+      0 12px 22px -14px color-mix(in oklab, var(--paper-ink) 76%, transparent);
+  }
+}
+
+.jpill:active {
+  box-shadow:
+    inset 0 2px 5px -2px color-mix(in oklab, var(--paper-ink) 32%, transparent),
+    0 1px 1px color-mix(in oklab, var(--paper-ink) 18%, transparent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .jpill {
+    transition:
+      transform var(--dur-press) var(--ease-out),
+      box-shadow var(--dur-state) var(--ease-out),
+      color var(--dur-state) var(--ease-out),
+      background var(--dur-state) var(--ease-out);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .jpill:hover {
+      transform: translateY(-1px);
+    }
+  }
+
+  .jpill:active {
+    transform: translateY(1px);
+  }
+}
+
+/* ---------- A pílula selecionada veste a pele do botão principal ----------
+   Degradê de preenchimento, sombra luminosa, uma varredura metálica que cruza de tempos em
+   tempos e um feixe de luz correndo pela borda. */
+.jpill[aria-current='true'] {
+  color: var(--on-grad);
+  border-color: transparent;
+  background-image:
+    linear-gradient(
+      100deg,
+      transparent 42%,
+      color-mix(in oklab, var(--paper) 75%, transparent) 50%,
+      transparent 58%
+    ),
+    var(--grad), var(--grad-4);
+  background-origin: padding-box, padding-box, border-box;
+  background-clip: padding-box, padding-box, border-box;
+  background-repeat: no-repeat, no-repeat, no-repeat;
+  background-size:
+    240% 100%,
+    100% 100%,
+    100% 100%;
+  background-position:
+    240% 0,
+    0 0,
+    0 0;
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, var(--primary-200) 45%, transparent),
+    inset 0 -4px 8px -4px var(--bevel-dark),
+    var(--shadow-cta);
+  animation: jpill-metal-sweep 5.4s var(--ease-out) infinite;
+}
+
+@keyframes jpill-metal-sweep {
+  0% {
+    background-position:
+      240% 0,
+      0 0,
+      0 0;
+  }
+  28%,
+  100% {
+    background-position:
+      -140% 0,
+      0 0,
+      0 0;
+  }
+}
+
+.jpill[aria-current='true']::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--angle),
+    transparent 0%,
+    var(--accent-400) 10%,
+    var(--primary-300) 16%,
+    var(--signal-400) 22%,
+    transparent 32%
+  );
+  mask-image:
+    linear-gradient(var(--mask-solid) 0 0),
+    linear-gradient(var(--mask-solid) 0 0);
+  mask-clip: content-box, border-box;
+  mask-origin: content-box, border-box;
+  mask-composite: exclude;
+  -webkit-mask-image:
+    linear-gradient(var(--mask-solid) 0 0),
+    linear-gradient(var(--mask-solid) 0 0);
+  -webkit-mask-clip: content-box, border-box;
+  -webkit-mask-origin: content-box, border-box;
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+  animation: beam-orbit 4.2s linear infinite;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .jpill[aria-current='true']:hover {
+    filter: brightness(1.08);
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, var(--primary-200) 55%, transparent),
+      inset 0 -4px 8px -4px var(--bevel-dark),
+      var(--shadow-cta),
+      var(--shadow-deep);
+  }
+}
+
+/* ---------- Os capítulos ---------- */
+.demo-chapters {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.demo-chapter {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+}
+
+@media (min-width: 1024px) {
+  .demo-chapters {
+    gap: var(--s-9);
+  }
+
+  /* Só com a sincronia ligada (atributo escrito por `scripts/demo.ts`) os capítulos fora de foco
+     ficam esmaecidos; sem script, todos ficam com leitura plena. */
+  html[data-demo-sync] [data-chapter] {
+    opacity: 0.42;
+    transition: opacity var(--dur-layout) var(--ease-out);
+  }
+
+  html[data-demo-sync] [data-chapter][data-current='true'] {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,25 @@
+---
+// Espaço de imagem. Com "src" preenchido mostra a imagem; vazio, mostra um
+// bloco em gradiente com um aviso (para você lembrar de trocar).
+interface Props {
+  src?: string;
+  alt?: string;
+  /** Proporção largura/altura, ex.: "4 / 3", "16 / 9", "1 / 1". */
+  ratio?: string;
+  label?: string;
+}
+
+const { src = '', alt = '', ratio = '4 / 3', label = 'Sua imagem aqui' } = Astro.props;
+---
+
+<div class="image-slot" style={`--ratio: ${ratio}`}>
+  {
+    src ? (
+      <img src={src} alt={alt} loading="lazy" decoding="async" />
+    ) : (
+      <div class="image-slot__empty" role="img" aria-label={alt || label}>
+        <span>{label}</span>
+      </div>
+    )
+  }
+</div>

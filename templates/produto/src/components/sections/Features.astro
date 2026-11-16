@@ -1,0 +1,62 @@
+---
+import Heading from '@/components/ui/Heading.astro'
+import { visible } from '@/lib/sections'
+import { site } from '@/site.config'
+
+/**
+ * As funcionalidades, na grade "bento". Cada card pode ter uma prova no pé, em um de três
+ * formatos: um dado (`stat`), etiquetas (`chips`) ou uma citação (`cite`).
+ */
+const { features } = site
+---
+
+{
+  visible.funcionalidades && (
+    <section id="funcionalidades" class="section band-paper" data-section="funcionalidades" aria-labelledby="funcionalidades-title">
+      <div class="section__shell">
+        <header class="section__header" data-reveal>
+          <Heading id="funcionalidades-title" class="t-h2" parts={features} />
+          {features.lead && <p class="t-lead">{features.lead}</p>}
+        </header>
+
+        <ul class="bento" role="list">
+          {features.items.map((feature, index) => (
+            <li
+              class="grad-border"
+              data-feature
+              data-glow-card
+              data-wide={feature.wide ? '' : undefined}
+              data-reveal
+              style={`--reveal-index:${index}`}
+            >
+              <h3 class="t-h3">{feature.title}</h3>
+              <p class="t-body">{feature.text}</p>
+
+              {feature.proof?.kind === 'cite' && (
+                <p class="cite-box bento__proof">
+                  <span class="cite-box__label">{feature.proof.label}</span>
+                  <span class="cite-box__text">{feature.proof.text}</span>
+                </p>
+              )}
+
+              {feature.proof?.kind === 'stat' && (
+                <p class="paper-proof bento__proof">
+                  <span class="paper-proof__label">{feature.proof.label}</span>
+                  <span class="paper-proof__value">{feature.proof.value}</span>
+                </p>
+              )}
+
+              {feature.proof?.kind === 'chips' && (
+                <span class="bento__chips">
+                  {feature.proof.items.map((item) => (
+                    <span class="paper-chip">{item}</span>
+                  ))}
+                </span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}

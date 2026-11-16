@@ -1,0 +1,25 @@
+---
+// Botão principal: borda com feixe de luz, brilho atrás, reflexo e seta.
+// O destino vem do site.config.ts (WhatsApp ou ctaHref). Estilo: global.css.
+// data-magnetic liga o efeito magnético (src/scripts/magnetic.ts).
+import { contactHref, isExternal } from '../../lib/contact';
+
+interface Props {
+  label: string;
+  /** true = o brilho de trás só acende ao passar o mouse. */
+  quiet?: boolean;
+}
+
+const { label, quiet = false } = Astro.props;
+const href = contactHref();
+const external = isExternal(href);
+---
+
+<span class:list={['cta-wrap', { 'cta-wrap--quiet': quiet }]} data-magnetic>
+  <span class="cta-glow" aria-hidden="true"></span>
+  <a class="cta" href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener' : undefined}>
+    {label}
+    <span class="cta-arrow" aria-hidden="true">→</span>
+    <span class="cta-sheen" aria-hidden="true"></span>
+  </a>
+</span>

@@ -1,0 +1,356 @@
+---
+// CASE EM DESTAQUE — título, texto e grade de pontos à esquerda; à direita
+// um celular que flutua e troca de tela pelas pílulas (ou sozinho). Cada
+// tela pode ser imagem, vídeo ou uma conversa desenhada em código.
+// A troca de telas é feita por src/scripts/phone.ts.
+import { site } from '../../site.config';
+import SectionHead from '../ui/SectionHead.astro';
+import HoloPill from '../ui/HoloPill.astro';
+import MockChat from '../mocks/MockChat.astro';
+import { rich } from '../../lib/rich';
+
+const study = site.caseStudy;
+const show = study.enabled;
+const screens = study.phone.screens;
+---
+
+{
+  show && (
+    <section class="section case" id="case">
+      <SectionHead title={study.title} titleAccent={study.titleAccent} titleAfter={study.titleAfter} text={study.text} accent="a">
+        <div class="case__lockup" slot="before">
+          {study.logo.src && <img class="case__logo" src={study.logo.src} alt={study.logo.alt} />}
+          {study.eyebrow && <span class="eyebrow case__eyebrow">{study.eyebrow}</span>}
+        </div>
+      </SectionHead>
+
+      <div class="case__grid">
+        <div class="case__copy">
+          {study.intro && <p class="case__intro" data-reveal>{study.intro}</p>}
+          {study.features.length > 0 && (
+            <div class="case__features">
+              {study.features.map((feature, index) => (
+                <div class="case__feature" data-reveal={(index * 0.05).toFixed(2)}>
+                  <h3>{feature.title}</h3>
+                  <p>{feature.text}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {screens.length > 0 && (
+          <div class="case__device" data-reveal="0.1">
+            <div class="case__gridlines" aria-hidden="true" />
+            <div class="case__glow" aria-hidden="true" />
+
+            <div class="phone" data-float>
+              <div class="phone__frame">
+                <span class="phone__btn phone__btn--l1" aria-hidden="true" />
+                <span class="phone__btn phone__btn--l2" aria-hidden="true" />
+                <span class="phone__btn phone__btn--l3" aria-hidden="true" />
+                <span class="phone__btn phone__btn--r1" aria-hidden="true" />
+                <div class="phone__screen" data-phone-screen data-autoplay-seconds={study.phone.autoplaySeconds}>
+                  {screens.map((screen, index) => (
+                    <div class:list={['phone__layer', { 'is-active': index === 0 }]} data-fn-layer={index} role="img" aria-label={screen.alt} aria-hidden={index === 0 ? undefined : 'true'}>
+                      {screen.image ? (
+                        <img src={screen.image} alt="" loading="lazy" decoding="async" />
+                      ) : (
+                        <MockChat phone name={site.name} avatar={site.name.charAt(0)} status="online" messages={screen.messages ?? []} />
+                      )}
+                      {screen.video && (
+                        <video data-vid={index} data-src-full={screen.video} data-src-mobile={screen.videoMobile ?? screen.video} muted playsinline preload="none" />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div class="case__pills" role="group" aria-label="Telas do exemplo">
+              {screens.map((screen, index) => (
+                <span class:list={['case__pill-frame', { 'is-active': index === 0 }]} data-fn-wrap={index}>
+                  <button type="button" class="case__pill" data-fn={index} aria-pressed={index === 0 ? 'true' : 'false'}>{screen.label}</button>
+                </span>
+              ))}
+            </div>
+            {study.phone.caption && <p class="case__caption">{study.phone.caption}</p>}
+          </div>
+        )}
+      </div>
+
+      {(study.quote || study.ctaLabel) && (
+        <div class="closing" data-reveal>
+          {study.quote && (
+            <div class="card case__quote">
+              <p class="rich" data-wordreveal set:html={rich(study.quote)} />
+            </div>
+          )}
+          {study.ctaLabel && (
+            <div class="closing__actions">
+              <HoloPill label={study.ctaLabel} />
+              {study.ctaNote && <p class="fine-print">{study.ctaNote}</p>}
+            </div>
+          )}
+        </div>
+      )}
+    </section>
+  )
+}
+
+<style>
+  .case {
+    padding-block: clamp(46px, 7vh, 104px);
+  }
+
+  .case :global(.h2) {
+    max-width: 1020px;
+  }
+
+  .case__lockup {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .case__logo {
+    width: auto;
+    height: clamp(44px, 4.5vw, 60px);
+  }
+
+  .case__eyebrow {
+    letter-spacing: 0.16em;
+  }
+
+  .case__grid {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: clamp(32px, 4vw, 64px);
+  }
+
+  .case__copy {
+    flex: 1 1 460px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(20px, 3vh, 28px);
+  }
+
+  .case__intro {
+    max-width: 640px;
+    font-size: clamp(16px, 1.4vw, 18px);
+    line-height: 1.65;
+    color: var(--ink-soft);
+  }
+
+  /* Grade de pontos: as linhas divisórias são o fundo aparecendo entre as
+     células (gap de 1px). O primeiro item ocupa a linha inteira. */
+  .case__features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+    gap: 1px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--ink) 12%, transparent);
+  }
+
+  .case__feature {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+    padding: clamp(18px, 2vw, 26px);
+    background: color-mix(in srgb, var(--ink) 5%, var(--bg-raised));
+    color: var(--ink);
+    overflow-wrap: anywhere;
+    transition: box-shadow 180ms ease, background 180ms ease;
+  }
+
+  .case__feature:first-child {
+    grid-column: 1 / -1;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .case__feature:hover {
+      background: color-mix(in srgb, var(--ink) 8%, var(--bg-raised));
+      box-shadow: inset var(--ring-hover);
+    }
+  }
+
+  .case__feature h3 {
+    font-family: var(--font-body);
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .case__feature p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+
+  /* ---- Celular ---- */
+  .case__device {
+    position: relative;
+    flex: 0 1 340px;
+    width: 100%;
+    min-width: 0;
+    margin: 0 auto;
+  }
+
+  /* Quadriculado discreto atrás do aparelho. */
+  .case__gridlines {
+    position: absolute;
+    inset: -12% -8%;
+    background-image:
+      repeating-linear-gradient(90deg, color-mix(in srgb, var(--ink) 5%, transparent) 0, color-mix(in srgb, var(--ink) 5%, transparent) 1px, transparent 1px, transparent 72px),
+      repeating-linear-gradient(0deg, color-mix(in srgb, var(--ink) 5%, transparent) 0, color-mix(in srgb, var(--ink) 5%, transparent) 1px, transparent 1px, transparent 72px);
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 46%, var(--ink) 30%, transparent 75%);
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 46%, var(--ink) 30%, transparent 75%);
+  }
+
+  .case__glow {
+    position: absolute;
+    inset: -14%;
+    background: radial-gradient(ellipse 55% 48% at 50% 46%, var(--accent-2) 0%, color-mix(in srgb, var(--accent-1) 55%, transparent) 45%, transparent 72%);
+    filter: blur(60px);
+    opacity: 0.4;
+  }
+
+  .phone {
+    position: relative;
+    z-index: 10;
+    width: clamp(250px, 26vw, 320px);
+    max-width: 100%;
+    margin: 0 auto;
+    will-change: transform;
+  }
+
+  /* Efeito "phoneFloat": o aparelho sobe e desce devagar. */
+  :global(.fx-float) .phone {
+    animation: phoneFloat 6s ease-in-out infinite alternate;
+  }
+
+  .phone__frame {
+    position: relative;
+    padding: 9px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xl);
+    background: var(--surface);
+    box-shadow: var(--shadow-phone);
+  }
+
+  /* Botões laterais do aparelho. */
+  .phone__btn {
+    position: absolute;
+    width: 2px;
+    border-radius: var(--radius-xs);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--ink) 28%, transparent), color-mix(in srgb, var(--ink) 10%, transparent));
+  }
+
+  .phone__btn--l1 { left: -1.5px; top: 17%; height: 4.5%; }
+  .phone__btn--l2 { left: -1.5px; top: 24.5%; height: 7.5%; }
+  .phone__btn--l3 { left: -1.5px; top: 33.5%; height: 7.5%; }
+  .phone__btn--r1 { right: -1.5px; top: 27%; height: 10.5%; }
+
+  .phone__screen {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 9 / 19.5;
+    border-radius: calc(var(--radius-xl) - 8px);
+    background: var(--bg-raised);
+  }
+
+  /* Uma camada por tela; só a ativa fica visível. */
+  .phone__layer {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 350ms ease-out;
+  }
+
+  .phone__layer.is-active {
+    opacity: 1;
+  }
+
+  .phone__layer img,
+  .phone__layer video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* ---- Pílulas que trocam a tela ---- */
+  .case__pills {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .case__pill-frame {
+    display: inline-flex;
+    padding: 1.5px;
+    border-radius: var(--radius-control);
+    background: color-mix(in srgb, var(--ink) 14%, transparent);
+    transition: background 250ms ease-out;
+  }
+
+  .case__pill-frame.is-active {
+    background: var(--grad-a);
+  }
+
+  .case__pill {
+    min-height: 32px;
+    padding: 6px 11px;
+    border: 0;
+    border-radius: var(--radius-control);
+    background: var(--neutral-800);
+    box-shadow: var(--shadow-inner);
+    color: color-mix(in srgb, var(--ink) 85%, transparent);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: color 250ms ease-out;
+  }
+
+  .case__pill-frame.is-active .case__pill {
+    color: var(--ink);
+  }
+
+  .case__caption {
+    position: relative;
+    z-index: 10;
+    max-width: 300px;
+    margin: 14px auto 0;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    line-height: 1.7;
+    text-align: center;
+    color: color-mix(in srgb, var(--ink) 72%, transparent);
+  }
+
+  /* ---- Frase de fechamento ---- */
+  .case__quote {
+    padding: clamp(20px, 2.5vw, 32px);
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--ink) 5%, var(--bg-raised));
+  }
+
+  .case__quote p {
+    max-width: 960px;
+    font-size: clamp(17px, 1.5vw, 20px);
+    line-height: 1.6;
+    color: var(--ink);
+  }
+</style>

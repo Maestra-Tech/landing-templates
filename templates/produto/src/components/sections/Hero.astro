@@ -1,0 +1,79 @@
+---
+import Cta from '@/components/ui/Cta.astro'
+import Heading from '@/components/ui/Heading.astro'
+import { site } from '@/site.config'
+
+/**
+ * O começo da página: fundo, promessa, botão e as três provas.
+ *
+ * O fundo depende do que estiver em `hero.media` no config:
+ *  - sem nada      → a "atmosfera" animada em CSS (luzes, feixes e pontos);
+ *  - com `poster`  → a imagem cobre o palco, com um véu escuro por cima;
+ *  - com `video`   → `scripts/hero-media.ts` cria o vídeo por cima do pôster depois que a página
+ *                    carrega, e só o mostra quando ele começa a tocar. Sem script, fica o pôster.
+ *
+ * As provas ficam abaixo do botão: no celular, o que precisa caber na primeira tela é a promessa
+ * e a ação.
+ */
+const { hero, cta } = site
+const { poster, video } = hero.media
+const proofs = hero.proofs.enabled ? hero.proofs.items : []
+---
+
+<section class="hero-stage band-cinema" data-section="hero" aria-labelledby="hero-title">
+  {
+    poster ? (
+      <>
+        <img
+          src={poster}
+          alt=""
+          width="1280"
+          height="720"
+          decoding="async"
+          loading="eager"
+          fetchpriority="high"
+          data-hero-poster
+          data-hero-webm={video.webm || undefined}
+          data-hero-mp4={video.mp4 || undefined}
+          data-hero-mobile={video.mobileMp4 || undefined}
+        />
+        <div class="hero-veil" aria-hidden="true" />
+      </>
+    ) : (
+      <div class="hero-atmosphere" aria-hidden="true">
+        <span class="hero-atmosphere__orb" />
+        <span class="hero-atmosphere__orb" />
+        <span class="hero-atmosphere__orb" />
+        <div class="hero-atmosphere__dots" />
+        <div class="hero-atmosphere__spotlight" />
+        <i class="hero-atmosphere__beam" />
+        <i class="hero-atmosphere__beam" />
+        <i class="hero-atmosphere__beam" />
+        <i class="hero-atmosphere__beam" />
+      </div>
+    )
+  }
+
+  <div class="hero-shell">
+    <div class="hero-copy">
+      <Heading as="h1" id="hero-title" class="t-hero" parts={hero} />
+      <p class="t-lead">{hero.support}</p>
+      <div class="hero-cta">
+        <Cta />
+        {cta.note && <p class="t-sm">{cta.note}</p>}
+      </div>
+      {
+        proofs.length > 0 && (
+          <ul class="hero-proofs" role="list">
+            {proofs.map((proof) => (
+              <li class="hero-proof">
+                <span class="hero-proof__value">{proof.value}</span>
+                <span class="hero-proof__label">{proof.label}</span>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+  </div>
+</section>
